@@ -12,6 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 @RestController
 @RequestMapping("/sys/role")
 public class RoleController {
@@ -82,5 +86,20 @@ public class RoleController {
         }else {
             return Result.error(StatusCode.DELETEERROR,"删除失败");
         }
+    }
+
+    @PostMapping("/saveRolePerms")
+    public Result saveRolePerms(@RequestBody HashMap params){
+        logger.info("MenuController.saveRolePerms参数："+ JSON.toJSONString(params));
+        Integer roleId = null;
+        List<Integer> menuIdList = new ArrayList<Integer>();
+        if(params.get("roleId")!=null){
+            roleId = (Integer) params.get("roleId");
+        }
+        if(params.get("menuIds")!=null){
+            menuIdList = (List<Integer>) params.get("menuIds");
+        }
+        roleService.saveRolePerms(roleId,menuIdList);
+        return Result.ok("添加权限成功");
     }
 }

@@ -5,9 +5,10 @@ import com.example.manageSystem.admin.module.menu.dao.MenuDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MenuService {
@@ -19,42 +20,31 @@ public class MenuService {
         return menuDao.findByRoleId(roleId);
     }
 
+    public Map<String,Object> getMenuTree(Integer roleId){
+        Map<String, Object> map = new HashMap<>();
+        List<Menu> menus = this.getAllMenuTree();
+        List<Menu> perms = this.getMenuTreeByRoleId(roleId);
+        List<Integer> permsIds = new ArrayList<>();
+        for (Menu perm : perms) {
+            permsIds.add(perm.getId());
+        }
+        map.put("menus",menus);
+        map.put("permsIds",permsIds);
+        return map;
+    }
+
     //根据角色id获取树状菜单
     public List<Menu> getMenuTreeByRoleId(Integer roleId){
-        List<Menu> menus = menuDao.findByRoleId(roleId);
-        for (Menu menu : menus) {
-            if (menu.getParentId()==null){
-                menu.setParentId(0);
-            }
-        }
+        List<Menu> perms = menuDao.findByRoleId(roleId);
+        perms = this.parseMenuTree(perms);
+        return perms;
+    }
+
+    //获取所有菜单的树状菜单
+    public List<Menu> getAllMenuTree(){
+        List<Menu> menus =menuDao.selectAll();
+        menus = this.parseMenuTree(menus);
         return menus;
-    }
-
-    public List<Menu> findAll() {
-        Example example = new Example(Menu.class);
-        Example.Criteria criteria = example.createCriteria();
-        List<Menu> menus = menuDao.selectAll();
-        return menus;
-    }
-
-
-    public Menu findById(Integer id) {
-        Menu menu = menuDao.selectByPrimaryKey(id);
-        return menu;
-    }
-
-    public boolean add(Menu menu) {
-        int i = menuDao.insert(menu);
-        return i>0;
-    }
-
-    public boolean edit(Menu menu) {
-        int i = 0;
-        Menu DbMenu = findById(menu.getId());
-        if (DbMenu!=null){
-            i = menuDao.updateByPrimaryKey(menu);
-        }
-        return i>0;
     }
 
     /**
@@ -90,4 +80,33 @@ public class MenuService {
         }
         return parent;
     }
+
+    public List<Menu> findAll() {
+        Example example = new Example(Menu.class);
+        Example.Criteria criteria = example.createCriteria();
+        List<Menu> menus = menuDao.selectAll();
+        return menus;
+    }
+
+
+    public Menu findById(Integer id) {
+        Menu menu = menuDao.selectByPrimaryKey(id);
+        return menu;
+    }
+
+    public boolean add(Menu menu) {
+        int i = menuDao.insert(menu);
+        return i>0;
+    }
+
+    public boolean edit(Menu menu) {
+        int i = 0;
+        Menu DbMenu = findById(menu.getId());
+        if (DbMenu!=null){
+            i = menuDao.updateByPrimaryKey(menu);
+        }
+        return i>0;
+    }
+
+
 }

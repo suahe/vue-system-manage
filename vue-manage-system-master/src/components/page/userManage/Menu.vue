@@ -234,7 +234,6 @@
                     }
                 }
                 data.forEach((item) => {
-                    debugger
                     if(item.children&&item.children.length>0){
                         this.orderChildren(item.children)
                     }

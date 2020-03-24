@@ -19,4 +19,6 @@ public class StatusCode {
 
     public static final int PARAMSERROR = 20010;//参数错误
 
+    public static final int ADDPERMSERROR = 20011;//添加权限失败
+
 }

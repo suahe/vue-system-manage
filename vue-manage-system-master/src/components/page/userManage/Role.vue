@@ -88,7 +88,7 @@
                 </div>
 
                 <el-tree
-                        :data="data"
+                        :data="perms"
                         show-checkbox
                         default-expand-all
                         node-key="id"
@@ -99,14 +99,14 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="permissVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
+                <el-button type="primary" @click="savePerms">确 定</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
-    import {getRoleList,addRole,getRoleById,editRole,delRole,delRoleByIds,getMenuTreeByRoleId} from '@/api/system'
+    import {getRoleList,addRole,getRoleById,editRole,delRole,delRoleByIds,getMenuTreeByRoleId,saveRolePerms} from '@/api/system'
     export default {
         data:function(){
             return {
@@ -131,44 +131,46 @@
                     role_name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }]
                 },
                 //权限
-                data: [{
+                roleId:'',
+                permsIds:[],
+                perms: [{
                     id: 1,
-                    label: '一级 1',
+                    name: '一级 1',
                     children: [{
                         id: 4,
-                        label: '二级 1-1',
+                        name: '二级 1-1',
                         children: [{
                             id: 9,
-                            label: '三级 1-1-1'
+                            name: '三级 1-1-1'
                         }, {
                             id: 10,
-                            label: '三级 1-1-2'
+                            name: '三级 1-1-2'
                         }]
                     }]
                 }, {
                     id: 2,
-                    label: '一级 2',
+                    name: '一级 2',
                     children: [{
                         id: 5,
-                        label: '二级 2-1'
+                        name: '二级 2-1'
                     }, {
                         id: 6,
-                        label: '二级 2-2'
+                        name: '二级 2-2'
                     }]
                 }, {
                     id: 3,
-                    label: '一级 3',
+                    name: '一级 3',
                     children: [{
                         id: 7,
-                        label: '二级 3-1'
+                        name: '二级 3-1'
                     }, {
                         id: 8,
-                        label: '二级 3-2'
+                        name: '二级 3-2'
                     }]
                 }],
                 defaultProps: {
                     children: 'children',
-                    label: 'label'
+                    label: 'name'
                 }
             };
         },
@@ -316,15 +318,32 @@
             handlePermiss(index, row) {
                 this.idx = index;
                 this.form = row;
+                //记录一下角色id
+                this.roleId = row.role_id;
                 getMenuTreeByRoleId(row.role_id).then(res=>{
-                    debugger
                     if(res.flag){
-                        this.menus = res.data;
-                        this.addVisible = false;
-                        this.editVisible = false;
+                        this.perms = res.data.menus;
+                        this.permsIds = res.data.permsIds;
+                        //由于dom元素还没有加载完，使用getCheckedKeys()方法会报错
+                        this.$nextTick(() => {
+                            this.$refs.tree.setCheckedKeys(this.permsIds)
+                        });
                         this.permissVisible = true;
                     }else {
                         this.$message.error(res.message);
+                    }
+                })
+            },
+            savePerms(){
+                var menuIds = this.getCheckedKeys();
+                debugger;
+                saveRolePerms({menuIds:menuIds,roleId:this.roleId}).then(res=>{
+                    if(res.flag){
+                        this.$message.success("添加权限成功");
+                        this.permissVisible = false;
+                        this.getData();
+                    }else {
+                       this.$message.error(res.message);
                     }
                 })
             },
@@ -333,6 +352,7 @@
             },
             getCheckedKeys() {
                 console.log(this.$refs.tree.getCheckedKeys());
+                return this.$refs.tree.getCheckedKeys();
             },
             setCheckedNodes() {
                 this.$refs.tree.setCheckedNodes([{
@@ -344,7 +364,7 @@
                 }]);
             },
             setCheckedKeys() {
-                this.$refs.tree.setCheckedKeys([3]);
+                this.$refs.tree.setCheckedKeys(this.permsIds);
             },
             resetChecked() {
                 this.$refs.tree.setCheckedKeys([]);

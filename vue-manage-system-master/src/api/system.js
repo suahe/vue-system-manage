@@ -24,7 +24,7 @@ export const addRole = params => {
 
 /*根据id获取角色*/
 export const getRoleById = id => {
-  return http.requestQuickGet(apiUrl+'/sys/role/getById'+"?id="+id);
+  return http.requestQuickGet(apiUrl+'/sys/role/findById'+"?id="+id);
 };
 
 /*编辑角色*/
@@ -64,4 +64,10 @@ export const addMenu = params =>{
 /**编辑菜单*/
 export const editMenu = params =>{
   return http.requestPost(apiUrl+'/sys/menu/edit',params);
+};
+
+/**添加勾选权限**/
+export const saveRolePerms = params =>{
+  debugger
+  return http.requestPost(apiUrl+'/sys/role/saveRolePerms',params);
 }
