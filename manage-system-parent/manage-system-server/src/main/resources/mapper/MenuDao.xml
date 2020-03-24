@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.manageSystem.admin.module.menu.dao.MenuDao">
+
+
+    <select id="findByRoleId" parameterType="Integer" resultType="com.example.manageSystem.admin.model.Menu">
+        SELECT menu_id AS id , parent_id AS parentId , NAME ,url,perms ,TYPE, icon ,order_num AS orderNum
+        FROM sys_menu  WHERE  menu_id IN (SELECT menu_id FROM sys_role_menu WHERE role_id = #{roleId})
+    </select>
+</mapper>
