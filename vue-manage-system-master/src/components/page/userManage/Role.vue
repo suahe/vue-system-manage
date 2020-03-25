@@ -80,11 +80,13 @@
         <el-dialog title="权限" :visible.sync="permissVisible" width="30%">
             <el-form  :model="form" :rules="rules" ref="ruleForm" label-width="80px">
                 <div class="buttons">
-                    <el-button @click="getCheckedNodes">通过 node 获取</el-button>
+                    <!--<el-button @click="getCheckedNodes">通过 node 获取</el-button>
                     <el-button @click="getCheckedKeys">通过 key 获取</el-button>
                     <el-button @click="setCheckedNodes">通过 node 设置</el-button>
                     <el-button @click="setCheckedKeys">通过 key 设置</el-button>
-                    <el-button @click="resetChecked">清空</el-button>
+                    <el-button @click="resetChecked">清空</el-button>-->
+                    <el-button type="primary" @click="checkedAll"  size="small">全选</el-button>
+                    <el-button type="primary" @click="resetChecked"  size="small">清空</el-button>
                 </div>
 
                 <el-tree
@@ -133,7 +135,7 @@
                 //权限
                 roleId:'',
                 permsIds:[],
-                perms: [{
+                perms: [/*{
                     id: 1,
                     name: '一级 1',
                     children: [{
@@ -167,7 +169,7 @@
                         id: 8,
                         name: '二级 3-2'
                     }]
-                }],
+                }*/],
                 defaultProps: {
                     children: 'children',
                     label: 'name'
@@ -336,7 +338,6 @@
             },
             savePerms(){
                 var menuIds = this.getCheckedKeys();
-                debugger;
                 saveRolePerms({menuIds:menuIds,roleId:this.roleId}).then(res=>{
                     if(res.flag){
                         this.$message.success("添加权限成功");
@@ -365,6 +366,13 @@
             },
             setCheckedKeys() {
                 this.$refs.tree.setCheckedKeys(this.permsIds);
+            },
+            checkedAll(){
+                var keys = [];
+                this.perms.forEach((perm)=>{
+                    keys.push(perm.id);
+                })
+                this.$refs.tree.setCheckedKeys(keys);
             },
             resetChecked() {
                 this.$refs.tree.setCheckedKeys([]);
