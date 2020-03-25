@@ -108,6 +108,11 @@ export default new Router({
                     meta: { title: '角色管理' }
                 },
                 {
+                    path: '/org',
+                    component: () => import( '../components/page/userManage/Org.vue'),
+                    meta: { title: '组织机构管理' }
+                },
+                {
                     path: '/config',
                     component: () => import( '../components/page/SysConfig.vue'),
                     meta: { title: '系统配置' }

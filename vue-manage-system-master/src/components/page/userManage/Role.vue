@@ -22,10 +22,10 @@
                     header-cell-class-name="table-header"
                     @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="role_id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="role_name" label="角色名称"></el-table-column>
-                <el-table-column prop="remark" label="备注"></el-table-column>
-                <el-table-column prop="create_time" :formatter="formatDate" label="创建时间"></el-table-column>
+                <el-table-column prop="roleId" label="ID" width="55" align="center"></el-table-column>
+                <el-table-column prop="roleName" label="角色名称" align="center"></el-table-column>
+                <el-table-column prop="remark" label="备注" align="center"></el-table-column>
+                <el-table-column prop="createTime" :formatter="formatDate" label="创建时间" align="center"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -47,8 +47,8 @@
         <!-- 新增弹出框 -->
         <el-dialog title="新增" :visible.sync="addVisible" width="30%">
             <el-form :model="form" :rules="rules" ref="ruleForm" label-width="80px">
-                <el-form-item prop="role_name" label="角色名称">
-                    <el-input v-model="form.role_name"></el-input>
+                <el-form-item prop="roleName" label="角色名称">
+                    <el-input v-model="form.roleName"></el-input>
                 </el-form-item>
                 <el-form-item label="备注">
                     <el-input v-model="form.remark"></el-input>
@@ -63,8 +63,8 @@
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
             <el-form  :model="form" :rules="rules" ref="ruleForm" label-width="80px">
-                <el-form-item prop="role_name" label="角色名称">
-                    <el-input v-model="form.role_name"></el-input>
+                <el-form-item prop="roleName" label="角色名称">
+                    <el-input v-model="form.roleName"></el-input>
                 </el-form-item>
                 <el-form-item label="备注">
                     <el-input v-model="form.remark"></el-input>
@@ -113,7 +113,7 @@
         data:function(){
             return {
                 query: {
-                    role_name: '',
+                    roleName: '',
                     pageIndex: 1,
                     pageSize: 10
                 },
@@ -130,7 +130,7 @@
                 ids:[],
                 menus:[],
                 rules: {
-                    role_name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }]
+                    roleName: [{ required: true, message: '请输入角色名称', trigger: 'blur' }]
                 },
                 //权限
                 roleId:'',
@@ -259,7 +259,7 @@
             handleEdit(index, row) {
                 this.idx = index;
                 this.form = row;
-                getRoleById(row.role_id).then(res=>{
+                getRoleById(row.roleId).then(res=>{
                     if(res.flag){
                         this.from = res.data;
                         this.addVisible = false;
@@ -321,8 +321,8 @@
                 this.idx = index;
                 this.form = row;
                 //记录一下角色id
-                this.roleId = row.role_id;
-                getMenuTreeByRoleId(row.role_id).then(res=>{
+                this.roleId = row.roleId;
+                getMenuTreeByRoleId(row.roleId).then(res=>{
                     if(res.flag){
                         this.perms = res.data.menus;
                         this.permsIds = res.data.permsIds;

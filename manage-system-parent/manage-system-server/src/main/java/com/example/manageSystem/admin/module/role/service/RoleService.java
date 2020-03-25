@@ -28,7 +28,7 @@ public class RoleService {
     }
 
     public boolean add(Role role){
-        role.setCreate_time(new Date());
+        role.setCreateTime(new Date());
         int i = roleDao.insert(role);
         return i>0;
     }
@@ -51,7 +51,7 @@ public class RoleService {
 
     public boolean edit(Role role) {
         int i = 0;
-        Role DbRole = this.findById(role.getRole_id());
+        Role DbRole = this.findById(role.getRoleId());
         if (DbRole!=null){
             i = roleDao.updateByPrimaryKey(role);
         }

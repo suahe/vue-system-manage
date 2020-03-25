@@ -43,16 +43,16 @@ public class ShiroRealm extends AuthorizingRealm {
 
 
         //把principals放session中 key=userId value=principals
-        SecurityUtils.getSubject().getSession().setAttribute(String.valueOf(user.getUser_id()),SecurityUtils.getSubject().getPrincipals());
+        SecurityUtils.getSubject().getSession().setAttribute(String.valueOf(user.getUserId()),SecurityUtils.getSubject().getPrincipals());
 
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         //赋予角色
-        List<Role> roles = roleService.findByUserId(user.getUser_id());
+        List<Role> roles = roleService.findByUserId(user.getUserId());
         for(Role role : roles){
-            simpleAuthorizationInfo.addRole(role.getRole_name());
+            simpleAuthorizationInfo.addRole(role.getRoleName());
 
             //赋予权限
-            List<Menu> menus = menuService.findByRoleId(role.getRole_id());
+            List<Menu> menus = menuService.findByRoleId(role.getRoleId());
             for(Menu menu : menus){
                 if(StringUtils.isNotBlank(menu.getPerms())){
                     simpleAuthorizationInfo.addStringPermission(menu.getPerms());

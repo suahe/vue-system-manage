@@ -157,6 +157,10 @@ export default {
                         {
                             index: 'role',
                             title: '角色管理'
+                        },
+                        {
+                            index: 'org',
+                            title: '组织机构管理'
                         }
                     ]
                 },

@@ -54,7 +54,7 @@ public class RoleController {
 
     @PostMapping("/edit")
     public Result edit(@RequestBody Role role){
-        if (role==null||role.getRole_id() == null){
+        if (role==null||role.getRoleId() == null){
             return Result.error(StatusCode.PARAMSERROR,"参数错误");
         }
         if (roleService.edit(role)) {

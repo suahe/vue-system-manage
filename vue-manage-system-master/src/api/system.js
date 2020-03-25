@@ -42,7 +42,7 @@ export const delRoleByIds = ids => {
   return http.requestQuickGet(apiUrl+'/sys/role/delByIds'+"?ids="+ids);
 };
 
-/*根据角色id查询权限*/
+/*根据角色id查询权限树形结构*/
 export const getMenuTreeByRoleId = roleId =>{
   return http.requestQuickGet(apiUrl+'/sys/menu/getMenuTreeByRoleId'+"?roleId="+roleId);
 };
@@ -59,7 +59,7 @@ export const getMenuById = id => {
 /**新增菜单*/
 export const addMenu = params =>{
   return http.requestPost(apiUrl+'/sys/menu/add',params);
-}
+};
 
 /**编辑菜单*/
 export const editMenu = params =>{
@@ -68,6 +68,17 @@ export const editMenu = params =>{
 
 /**添加勾选权限**/
 export const saveRolePerms = params =>{
-  debugger
   return http.requestPost(apiUrl+'/sys/role/saveRolePerms',params);
-}
+};
+
+/**获取组织树形结构*/
+export const getOrgTree = () =>{
+  return http.requestQuickGet(apiUrl+'/sys/org/getOrgTree');
+};
+/**根据组织id获取用户列表*/
+export const getUsersByOrgId = (params) =>{
+  //将params对象数据拼装成key/value串
+  let paramsString =  querystring.stringify(params);
+  debugger
+  return http.requestQuickGet(apiUrl+'/sys/org/getUsersByOrgId?'+paramsString);
+};

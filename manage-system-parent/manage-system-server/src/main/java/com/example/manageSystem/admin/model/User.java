@@ -1,18 +1,16 @@
 package com.example.manageSystem.admin.model;
 
-import lombok.Data;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
-@Data
 @Table(name="sys_user")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private Integer user_id;
+    private Integer userId;
     private String name;//姓名
     private String username;//用户名
     private String password;//密码
@@ -20,15 +18,15 @@ public class User implements Serializable {
     private String email;//邮箱
     private String mobile;//手机号
     private Short status; //状态 0：禁用 1：正常
-    private Integer dept_id;//部门ID
-    private Date create_time;//创建时间
+    private Integer deptId;//部门ID
+    private Date createTime;//创建时间
 
-    public Integer getUser_id() {
-        return user_id;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getName() {
@@ -87,19 +85,19 @@ public class User implements Serializable {
         this.status = status;
     }
 
-    public Integer getDept_id() {
-        return dept_id;
+    public Integer getDeptId() {
+        return deptId;
     }
 
-    public void setDept_id(Integer dept_id) {
-        this.dept_id = dept_id;
+    public void setDeptId(Integer deptId) {
+        this.deptId = deptId;
     }
 
-    public Date getCreate_time() {
-        return create_time;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCreate_time(Date create_time) {
-        this.create_time = create_time;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

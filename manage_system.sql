@@ -78,6 +78,33 @@ CREATE TABLE `sys_role_menu` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=650 DEFAULT CHARSET=utf8 COMMENT='角色与菜单对应关系';
 
+-- 组织机构表
+DROP TABLE IF EXISTS `SYS_ORG`;
+CREATE TABLE SYS_ORG
+(
+  org_id            BIGINT(20) NOT NULL,
+  parent_id         BIGINT(20) DEFAULT NULL  COMMENT '上级ID',
+  org_code          VARCHAR(64) COMMENT '部门编码',
+  industry_category VARCHAR(32) COMMENT '行业类型',
+  org_name          VARCHAR(256) COMMENT '部门名称',
+  creator           VARCHAR(32) COMMENT '创建人',
+  create_time       DATE  COMMENT '创建时间',
+  county         VARCHAR(128) COMMENT '所属区',
+  street         VARCHAR(128) COMMENT '所属街道/镇',
+  neighborhood   VARCHAR(128) COMMENT '所属居委会/村',
+  item_id           BIGINT(20) COMMENT '项目id'
+  remark          VARCHAR(1000) COMMENT '备注'
+)
+
+-- 用户和组织机构中间表
+
+DROP TABLE IF EXISTS `SYS_ORG_USER`;
+CREATE TABLE SYS_ORG_USER(
+  id          BIGINT(20) NOT NULL,
+  user_id     BIGINT(20) COMMENT '用户ID',
+  org_id      BIGINT(20) COMMENT '组织机构ID'
+)
+
 
 -- 操作日志表
 DROP TABLE IF EXISTS `sys_log`;

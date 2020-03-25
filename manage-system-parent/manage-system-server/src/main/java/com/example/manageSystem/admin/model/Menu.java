@@ -1,6 +1,5 @@
 package com.example.manageSystem.admin.model;
 
-import lombok.Data;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -8,7 +7,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Table(name = "sys_menu")
 public class Menu implements Serializable {
     private static final long serialVersionUID = 1L;
