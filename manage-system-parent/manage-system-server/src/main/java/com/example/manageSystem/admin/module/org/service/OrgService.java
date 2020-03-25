@@ -1,25 +1,17 @@
 package com.example.manageSystem.admin.module.org.service;
 
 import com.example.manageSystem.admin.model.Org;
-import com.example.manageSystem.admin.model.User;
 import com.example.manageSystem.admin.module.org.dao.OrgDao;
-import com.example.manageSystem.admin.module.user.dao.UserDao;
-import com.github.pagehelper.PageHelper;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
-import tk.mybatis.mapper.entity.Example;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class OrgService {
+
     @Autowired
     OrgDao orgDao;
-    @Autowired
-    UserDao userDao;
 
     //生成组织树形结构
     public List<Org> getOrgTree(){
@@ -62,9 +54,4 @@ public class OrgService {
         return parent;
     }
 
-    public List<User> getUsersByOrgId(Integer orgId, String username, int pageIndex, int pageSize) {
-        PageHelper.startPage(pageIndex,pageSize);
-        List<User> users = orgDao.getUsersByOrgId(orgId,username);
-        return users;
-    }
 }

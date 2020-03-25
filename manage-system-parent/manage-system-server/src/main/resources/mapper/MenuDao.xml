@@ -7,4 +7,6 @@
         SELECT menu_id AS id , parent_id AS parentId , NAME ,url,perms ,TYPE, icon ,order_num AS orderNum
         FROM sys_menu  WHERE  menu_id IN (SELECT menu_id FROM sys_role_menu WHERE role_id = #{roleId})
     </select>
+
+
 </mapper>

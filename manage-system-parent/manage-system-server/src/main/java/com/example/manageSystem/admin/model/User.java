@@ -14,6 +14,7 @@ public class User implements Serializable {
     private String name;//姓名
     private String username;//用户名
     private String password;//密码
+    private Short sex;//性别
     private String salt;//盐
     private String email;//邮箱
     private String mobile;//手机号
@@ -51,6 +52,14 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Short getSex() {
+        return sex;
+    }
+
+    public void setSex(Short sex) {
+        this.sex = sex;
     }
 
     public String getSalt() {

@@ -39,7 +39,7 @@ public class ShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         logger.info("授权doGetAuthorizationInfo+"+principalCollection.toString());
-        User user = userService.findByUserName((String) principalCollection.getPrimaryPrincipal());
+        User user = userService.findByUsername((String) principalCollection.getPrimaryPrincipal());
 
 
         //把principals放session中 key=userId value=principals
@@ -80,7 +80,7 @@ public class ShiroRealm extends AuthorizingRealm {
         String userName=token.getUsername();
         logger.info("当前用户用户名和密码："+userName+","+ JSON.toJSONString(token.getPassword()));
 
-        User user = userService.findByUserName(token.getUsername());
+        User user = userService.findByUsername(token.getUsername());
         if (user != null) {
 //            byte[] salt = Encodes.decodeHex(user.getSalt());
 //            ShiroUser shiroUser=new ShiroUser(user.getId(), user.getLoginName(), user.getName());

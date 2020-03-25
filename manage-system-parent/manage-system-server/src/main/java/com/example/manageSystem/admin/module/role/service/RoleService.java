@@ -28,9 +28,21 @@ public class RoleService {
     }
 
     public boolean add(Role role){
+        //查询角色名称是否存在
+        Role DbRole = this.findByRoleName(role.getRoleName());
+        if (DbRole!=null){
+            throw new RuntimeException("角色名称已存在");
+        }
         role.setCreateTime(new Date());
         int i = roleDao.insert(role);
         return i>0;
+    }
+
+    public Role findByRoleName(String roleName){
+        Example example = new Example(Role.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("roleName",roleName);
+        return roleDao.selectOneByExample(example);
     }
 
     public PageInfo<Role> findPage(String roleName, int pageIndex, int pageSize) {
@@ -50,11 +62,19 @@ public class RoleService {
     }
 
     public boolean edit(Role role) {
-        int i = 0;
         Role DbRole = this.findById(role.getRoleId());
-        if (DbRole!=null){
-            i = roleDao.updateByPrimaryKey(role);
+        if (DbRole==null){
+            throw new RuntimeException("修改的角色不存在");
         }
+        Example example = new Example(Role.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("roleName",role.getRoleName());
+        criteria.andNotEqualTo("roleId",role.getRoleId());
+        DbRole = roleDao.selectOneByExample(example);
+        if (DbRole!=null){
+            throw new RuntimeException("角色名称已存在");
+        }
+        int i = roleDao.updateByPrimaryKey(role);
         return i>0;
     }
 

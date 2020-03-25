@@ -2,15 +2,4 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.manageSystem.admin.module.org.dao.OrgDao">
 
-    <select id="getUsersByOrgId" resultType="com.example.manageSystem.admin.model.User">
-        select * from sys_user where user_id in (select user_id from sys_org_user
-        <if test="orgId!=null and orgId !=''">
-            where org_id = #{orgId}
-        </if>
-        )
-        <if test="username!=null and username !=''" >
-            <bind name="patter" value="'%'+username+'%'"/>
-            and username like #{patter}
-        </if>
-    </select>
 </mapper>

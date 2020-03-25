@@ -79,6 +79,20 @@ export const getOrgTree = () =>{
 export const getUsersByOrgId = (params) =>{
   //将params对象数据拼装成key/value串
   let paramsString =  querystring.stringify(params);
-  debugger
-  return http.requestQuickGet(apiUrl+'/sys/org/getUsersByOrgId?'+paramsString);
+  return http.requestQuickGet(apiUrl+'/sys/user/getUsersByOrgId?'+paramsString);
+};
+
+/**根据用户id获取用户*/
+export const getUserById = (userId) =>{
+  return http.requestQuickGet(apiUrl+'/sys/user/getUserById?userId'+userId);
+};
+
+/**增加用户*/
+export const addUser = (params) =>{
+  return http.requestQuickGet(apiUrl+'/sys/user/getUserById?userId'+userId);
+};
+
+/**编辑用户*/
+export const editUser = (params) =>{
+  return http.requestPost(apiUrl+'/sys/user/editUser?userId'+userId);
 };
