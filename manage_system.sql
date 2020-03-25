@@ -89,12 +89,13 @@ CREATE TABLE SYS_ORG
   org_name          VARCHAR(256) COMMENT '部门名称',
   creator           VARCHAR(32) COMMENT '创建人',
   create_time       DATE  COMMENT '创建时间',
-  county         VARCHAR(128) COMMENT '所属区',
-  street         VARCHAR(128) COMMENT '所属街道/镇',
-  neighborhood   VARCHAR(128) COMMENT '所属居委会/村',
-  item_id           BIGINT(20) COMMENT '项目id'
-  remark          VARCHAR(1000) COMMENT '备注'
+  county            VARCHAR(128) COMMENT '所属区',
+  street            VARCHAR(128) COMMENT '所属街道/镇',
+  neighborhood      VARCHAR(128) COMMENT '所属居委会/村',
+  item_id           BIGINT(20) COMMENT '项目id',
+  remark            VARCHAR(1000) COMMENT '备注'
 )
+
 
 -- 用户和组织机构中间表
 
