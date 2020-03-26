@@ -13,4 +13,8 @@ public interface RoleDao extends Mapper<Role> {
     int addPerms(@Param("roleId") Integer roleId,@Param("menuIdList") List<Integer> menuIdList);
 
     int delPermsByRoleId(Integer roleId);
+
+    int delByUserId(Integer userId);
+
+    List<Role> getByRoleNameList(List<String> roleNameList);
 }

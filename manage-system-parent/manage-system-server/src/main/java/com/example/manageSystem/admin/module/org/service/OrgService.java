@@ -1,17 +1,23 @@
 package com.example.manageSystem.admin.module.org.service;
 
 import com.example.manageSystem.admin.model.Org;
+import com.example.manageSystem.admin.model.User;
 import com.example.manageSystem.admin.module.org.dao.OrgDao;
+import com.example.manageSystem.admin.module.user.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrgService {
 
     @Autowired
     OrgDao orgDao;
+    @Autowired
+    UserDao userDao;
 
     //生成组织树形结构
     public List<Org> getOrgTree(){
@@ -52,6 +58,19 @@ public class OrgService {
             }
         }
         return parent;
+    }
+
+    public Org findById(Integer orgId) {
+        return orgDao.selectByPrimaryKey(orgId);
+    }
+
+    public Map<String, Object> getOrgAndUsersByOrgId(Integer orgId) {
+        Map<String,Object> map = new HashMap<String, Object>();
+        Org org = this.findById(orgId);
+        List<User> users = userDao.getUsersByOrgId(orgId,null);
+        map.put("org",org);
+        map.put("users",users);
+        return map;
     }
 
 }

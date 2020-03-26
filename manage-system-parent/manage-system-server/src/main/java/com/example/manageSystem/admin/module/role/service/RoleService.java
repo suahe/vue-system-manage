@@ -9,11 +9,10 @@ import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class RoleService {
@@ -27,6 +26,7 @@ public class RoleService {
         return roleDao.findByUserId(userId);
     }
 
+    @Transactional
     public boolean add(Role role){
         //查询角色名称是否存在
         Role DbRole = this.findByRoleName(role.getRoleName());
@@ -42,6 +42,14 @@ public class RoleService {
         Example example = new Example(Role.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("roleName",roleName);
+        return roleDao.selectOneByExample(example);
+    }
+
+    public Role findByRoleName(Integer roleId,String roleName){
+        Example example = new Example(Role.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("roleName",roleName);
+        criteria.andNotEqualTo("roleId",roleId);
         return roleDao.selectOneByExample(example);
     }
 
@@ -61,16 +69,13 @@ public class RoleService {
         return roleDao.selectByPrimaryKey(id);
     }
 
+    @Transactional
     public boolean edit(Role role) {
         Role DbRole = this.findById(role.getRoleId());
         if (DbRole==null){
             throw new RuntimeException("修改的角色不存在");
         }
-        Example example = new Example(Role.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("roleName",role.getRoleName());
-        criteria.andNotEqualTo("roleId",role.getRoleId());
-        DbRole = roleDao.selectOneByExample(example);
+        DbRole = this.findByRoleName(role.getRoleId(),role.getRoleName());
         if (DbRole!=null){
             throw new RuntimeException("角色名称已存在");
         }
@@ -78,6 +83,7 @@ public class RoleService {
         return i>0;
     }
 
+    @Transactional
     public boolean del(Integer id) {
         int i = 0 ;
         Role role = findById(id);
@@ -88,6 +94,7 @@ public class RoleService {
     }
 
     //批量删除
+    @Transactional
     public boolean delByIds(Integer[] ids) {
         boolean bo = false;
         for (Integer id : ids) {
@@ -96,6 +103,8 @@ public class RoleService {
         return bo;
     }
 
+    //保存角色分配的权限
+    @Transactional
     public void saveRolePerms(Integer roleId, List<Integer> menuIdList) {
         //先查询该角色是否存在
         Role role = findById(roleId);
@@ -113,5 +122,35 @@ public class RoleService {
         if (menuIdList!=null&&menuIdList.size()>0){
             roleDao.addPerms(roleId,menuIdList);
         }
+    }
+
+    public List<Role> findAll() {
+        return roleDao.selectAll();
+    }
+
+    //根据用户id和组织id查询角色列表和已经分配给用户的角色名称列表
+    public Map<String,Object> getRolesByOrgIdAndUserId(Integer orgId,Integer userId) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<Role> roles = this.findAll();
+        List<Role> checkedRoleList = roleDao.findByUserId(userId);
+        List<String> checkedRoles = new ArrayList<String>();
+        for (Role role : checkedRoleList) {
+            checkedRoles.add(role.getRoleName());
+        }
+        map.put("roles",roles);
+        map.put("checkedRoles",checkedRoles);
+        return map;
+    }
+
+    public void delByUserId(Integer userId) {
+        roleDao.delByUserId(userId);
+    }
+
+    public List<Role> getByRoleNameList(List<String> roleNameList) {
+        if (roleNameList==null&&roleNameList.size()==0){
+            return new ArrayList<Role>();
+        }
+        List<Role> roles = roleDao.getByRoleNameList(roleNameList);
+        return roles;
     }
 }

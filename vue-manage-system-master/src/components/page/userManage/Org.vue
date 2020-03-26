@@ -21,27 +21,27 @@
             </div>
             <!--tabs表格-->
             <el-container>
-                <el-tabs v-model="activeName" type="card" @tab-click="handleClick" style="width: 80%">
+                <el-tabs v-model="activeName" type="card" @tab-click="handleClick" style="width: 90%">
                     <el-tab-pane label="组织机构信息" name="first">
                         <div>
-                            <el-form :model="form" ref="ruleForm" label-width="20%">
+                            <el-form :model="orgForm" ref="ruleForm" label-width="20%">
                                 <el-form-item prop="orgName" label="机构名称">
-                                    <el-input v-model="form.orgName"></el-input>
+                                    <el-input v-model="orgForm.orgName"></el-input>
                                 </el-form-item>
                                 <el-form-item prop="orgName" label="行业类型">
-                                    <el-input v-model="form.industryCategory"></el-input>
+                                    <el-input v-model="orgForm.industryCategory"></el-input>
                                 </el-form-item>
                                 <el-form-item prop="county" label="所属区">
-                                    <el-input v-model="form.county"></el-input>
+                                    <el-input v-model="orgForm.county"></el-input>
                                 </el-form-item>
                                 <el-form-item label="所属街道/镇">
-                                    <el-input v-model="form.street"></el-input>
+                                    <el-input v-model="orgForm.street"></el-input>
                                 </el-form-item>
                                 <el-form-item label="所属居委会/村">
-                                    <el-input v-model="form.neighborhood"></el-input>
+                                    <el-input v-model="orgForm.neighborhood"></el-input>
                                 </el-form-item>
                                 <el-form-item label="备注">
-                                    <el-input v-model="form.remark"></el-input>
+                                    <el-input v-model="orgForm.remark"></el-input>
                                 </el-form-item>
                             </el-form>
                         </div>
@@ -65,7 +65,7 @@
                             <el-table-column prop="userId" label="ID" width="55" align="center"></el-table-column>
                             <el-table-column prop="name" label="真实姓名" align="center"></el-table-column>
                             <el-table-column prop="username" label="用户名称" align="center"></el-table-column>
-                            <el-table-column prop="" label="角色" align="center"></el-table-column>
+                            <el-table-column prop="roleNames" label="角色" align="center"></el-table-column>
                             <el-table-column prop="mobile" label="联系电话" align="center"></el-table-column>
                             <el-table-column prop="email" label="邮箱地址" align="center"></el-table-column>
                             <el-table-column label="操作" width="180" align="center">
@@ -91,19 +91,19 @@
 
                         <!-- 新增弹出框 -->
                         <el-dialog title="新增" :visible.sync="addVisible" width="30%">
-                            <el-form :model="form" :rules="rules" ref="ruleForm" label-width="80px">
+                            <el-form :model="userForm" :rules="userRules" ref="ruleUserForm" label-width="80px">
                                 <el-form-item prop="username" label="用户名称">
-                                    <el-input v-model="form.username"></el-input>
+                                    <el-input v-model="userForm.username"></el-input>
                                 </el-form-item>
                                 <el-form-item prop="name" label="真实姓名">
-                                    <el-input v-model="form.name"></el-input>
+                                    <el-input v-model="userForm.name"></el-input>
                                 </el-form-item>
-                                <el-form-item prop="password"  label="密码">
-                                    <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
+                                <!--<el-form-item prop="password"  label="密码">
+                                    <el-input v-model="form.password" autocomplete="off"></el-input>
                                 </el-form-item>
                                 <el-form-item prop="checkPassword" label="确认密码">
                                     <el-input type="password" v-model="form.checkPassword" autocomplete="off"></el-input>
-                                </el-form-item>
+                                </el-form-item>-->
                                 <el-form-item prop="sex" label="性别">
                                     <el-radio v-model="radio" label="1">男</el-radio>
                                     <el-radio v-model="radio" label="2">女</el-radio>
@@ -115,10 +115,10 @@
                                     </el-checkbox-group>
                                 </el-form-item>
                                 <el-form-item label="联系方式">
-                                    <el-input v-model="form.mobile"></el-input>
+                                    <el-input v-model="userForm.mobile"></el-input>
                                 </el-form-item>
                                 <el-form-item label="邮箱">
-                                    <el-input v-model="form.email"></el-input>
+                                    <el-input v-model="userForm.email"></el-input>
                                 </el-form-item>
                             </el-form>
 
@@ -130,19 +130,19 @@
 
                         <!-- 编辑弹出框 -->
                         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-                            <el-form :model="form" :rules="rules" ref="ruleForm" label-width="80px">
+                            <el-form :model="userForm" :rules="userRules" ref="ruleUserForm" label-width="80px">
                                 <el-form-item prop="username" label="用户名称">
-                                    <el-input v-model="form.username"></el-input>
+                                    <el-input v-model="userForm.username"></el-input>
                                 </el-form-item>
                                 <el-form-item prop="name" label="真实姓名">
-                                    <el-input v-model="form.name"></el-input>
+                                    <el-input v-model="userForm.name"></el-input>
                                 </el-form-item>
-                                <el-form-item prop="password"  label="密码">
+                                <!--<el-form-item prop="password"  label="密码">
                                     <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
                                 </el-form-item>
                                 <el-form-item prop="checkPassword" label="确认密码">
                                     <el-input type="password" v-model="form.checkPassword" autocomplete="off"></el-input>
-                                </el-form-item>
+                                </el-form-item>-->
                                 <el-form-item prop="radio" label="性别">
                                     <el-radio v-model="radio" label="1">男</el-radio>
                                     <el-radio v-model="radio" label="2">女</el-radio>
@@ -154,10 +154,10 @@
                                     </el-checkbox-group>
                                 </el-form-item>
                                 <el-form-item label="联系方式">
-                                    <el-input v-model="form.mobile"></el-input>
+                                    <el-input v-model="userForm.mobile"></el-input>
                                 </el-form-item>
                                 <el-form-item label="邮箱">
-                                    <el-input v-model="form.email"></el-input>
+                                    <el-input v-model="userForm.email"></el-input>
                                 </el-form-item>
                             </el-form>
                             <span slot="footer" class="dialog-footer">
@@ -173,19 +173,21 @@
 </template>
 
 <script>
-    import { getOrgTree, getUsersByOrgId,getUserById,addUser } from '@/api/system';
+    import {
+        getOrgTree, getUsersByOrgId,getUserAndRolesById,getRolesByOrgIdAndUserId,
+        getOrgAndUsersByOrgId,editUser,addUser,delUserByUserId
+    } from '@/api/system';
 
     export default {
 
         data() {
             const roleOptions = [{roleId:1,roleName:'上海'}, {roleId:2,roleName:'北京'}, {roleId:3,roleName:'广州'}, {roleId:4,roleName:'深圳'}];
             var validatePass = (rule, value, callback) => {
-                debugger
                 if (value === '') {
                     callback(new Error('请输入密码'));
                 } else {
-                    if (this.form.checkPassword !== '') {
-                        this.$refs.ruleForm.validateField('checkPassword');
+                    if (this.userForm.checkPassword !== '') {
+                        this.$refs.ruleUserForm.validateField('checkPassword');
                     }
                     callback();
                 }
@@ -193,7 +195,7 @@
             var validatePass2 = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请再次输入密码'));
-                } else if (value !== this.form.password) {
+                } else if (value !== this.userForm.password) {
                     callback(new Error('两次输入密码不一致!'));
                 } else {
                     callback();
@@ -211,7 +213,8 @@
                 pageTotal: 0,
                 tableData: [],
                 activeName: 'first',
-                form: {},
+                userForm: {},
+                orgForm:{},
                 radio:'1',
                 menuVisible: false,
                 treeData: [],
@@ -221,7 +224,7 @@
                 },
                 editVisible:false,
                 addVisible:false,
-                rules: {
+                userRules: {
                     username:[{ required: true, message: '请输入用户名称', trigger: 'blur' }],
                     name:[{ required: true, message: '请输入真实姓名', trigger: 'blur' }],
                     password: [{ validator: validatePass, trigger: 'blur' }],
@@ -256,8 +259,18 @@
                 }
                 console.log(tab, event);
             },
+            //被鼠标点击
             handleNodeClick(data) {
                 console.log(data);
+                this.query.orgId = data.orgId;//赋值
+                getOrgAndUsersByOrgId(this.query.orgId).then(res=>{
+                    if (res.flag){
+                        this.orgForm = res.data.org;
+                        this.tableData = res.data.users;
+                    }else {
+                        this.$message.error(res.message)
+                    }
+                })
             },
             rightClick(MouseEvent, object, Node, element) { // 鼠标右击触发事件
                 this.menuVisible = false; // 先把模态框关死，目的是 第二次或者第n次右键鼠标的时候 它默认的是true
@@ -290,17 +303,32 @@
             },
             //新增窗口
             handleAdd() {
-                this.form = {};
-                this.editVisible = false;
-                this.addVisible = true;
+                this.userForm = {};
+                if(!this.query.orgId){
+                    this.$message.error("请选择组织机构");
+                    return
+                }
+                getRolesByOrgIdAndUserId(this.query.orgId).then(res=>{
+                    if(res.flag){
+                        this.roles = res.data.roles;
+                        this.checkedRoles = res.data.checkedRoles;
+                        this.editVisible = false;
+                        this.addVisible = true;
+                    }else {
+                        this.$message.error(res.message)
+                    }
+                })
             },
             //编辑窗口
             handleEdit(index, row) {
                 this.idx = index;
-                this.form = row;
-                getUserById(row.userId).then(res=>{
+                this.userForm = row;
+                getUserAndRolesById({userId:row.userId,orgId:this.query.orgId}).then(res=>{
                     if(res.flag){
-                        this.from = res.data;
+                        this.userForm = res.data.user;
+                        this.radio = res.data.user.sex+'';
+                        this.roles = res.data.roles;
+                        this.checkedRoles = res.data.checkedRoles;
                         this.addVisible = false;
                         this.editVisible = true;
                     }else {
@@ -310,46 +338,44 @@
             },
             //新增操作
             saveAdd() {
-                /*this.$refs.ruleForm.validate(valid => {
-                    if (valid) {*/
-                        addUser(this.form).then(res=>{
-                            if (res.flag) {
-                                this.$message.success(res.message);
-                            }else {
-                                this.$message.error(res.message);
-                                console.log(res.message);
-                                return false;
-                            }
-                            this.addVisible = false;
-                            this.gettableData();
-                        })
-                   /* } else {
-                        this.$message.error('请输入角色名称');
+                this.userForm.sex = this.radio;//设置性别
+                addUser(this.userForm).then(res=>{
+                    if (res.flag) {
+                        this.$message.success(res.message);
+                    }else {
+                        this.$message.error(res.message);
+                        console.log(res.message);
                         return false;
                     }
-                });*/
+                    this.addVisible = false;
+                    this.gettableData();
+                })
             },
             //编辑操作
             saveEdit() {
-                this.$refs.ruleForm.validate(valid => {
-                    if (valid) {
-                        editUser(this.form).then(res=>{
-                            if (res.flag) {
-                                this.$message.success(res.message);
-                            }else {
-                                this.$message.error(res.message);
-                                console.log(res.message);
-                                return false;
-                            }
-                            this.editVisible = false;
-                            this.gettableData();
-                        });
-                    } else {
-                        this.$message.error('请输入角色名称');
+                this.userForm.sex = this.radio;//设置性别
+                this.userForm.checkedRoles = this.checkedRoles;//勾选的角色
+                editUser(this.userForm).then(res=>{
+                    if (res.flag) {
+                        this.$message.success(res.message);
+                    }else {
+                        this.$message.error(res.message);
+                        console.log(res.message);
                         return false;
                     }
+                    this.editVisible = false;
+                    this.gettableData();
                 });
             },
+            handleDelete(index, row){
+                delUserByUserId(row.userId).then(res=>{
+                    if(res.flag){
+                        this.$message.success("删除了"+row.getusername);
+                    }else {
+                        this.$message.error(res.message)
+                    }
+                })
+            }
         }
     };
 </script>

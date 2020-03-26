@@ -83,16 +83,33 @@ export const getUsersByOrgId = (params) =>{
 };
 
 /**根据用户id获取用户*/
-export const getUserById = (userId) =>{
-  return http.requestQuickGet(apiUrl+'/sys/user/getUserById?userId'+userId);
+export const getUserAndRolesById = (params) =>{
+    let paramsString =  querystring.stringify(params);
+  return http.requestQuickGet(apiUrl+'/sys/user/getUserAndRolesById?'+paramsString);
 };
 
 /**增加用户*/
 export const addUser = (params) =>{
-  return http.requestQuickGet(apiUrl+'/sys/user/getUserById?userId'+userId);
+  return http.requestPost(apiUrl+'/sys/user/addUser',params);
 };
 
 /**编辑用户*/
 export const editUser = (params) =>{
-  return http.requestPost(apiUrl+'/sys/user/editUser?userId'+userId);
+  debugger
+  return http.requestPost(apiUrl+'/sys/user/editUser',params);
+};
+
+/**根据组织id获取当前用户所能添加的角色*/
+export const getRolesByOrgIdAndUserId = (orgId) =>{
+  return http.requestQuickGet(apiUrl+'/sys/role/getRolesByOrgIdAndUserId?orgId='+orgId);
+};
+
+/**根据组织机构id查询机构*/
+export const getOrgAndUsersByOrgId = orgId =>{
+    return http.requestQuickGet(apiUrl+'/sys/org/getOrgAndUsersByOrgId?orgId='+orgId);
+};
+
+/**根据用户id删除用户*/
+export const delUserByUserId = (userId) =>{
+  return http.requestQuickGet(apiUrl+'/sys/user/del?userId='+userId);
 };

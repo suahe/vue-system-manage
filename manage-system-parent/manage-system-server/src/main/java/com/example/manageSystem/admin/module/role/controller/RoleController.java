@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/sys/role")
@@ -102,4 +103,16 @@ public class RoleController {
         roleService.saveRolePerms(roleId,menuIdList);
         return Result.ok("添加权限成功");
     }
+
+    //只能添加选择机构对应及以下的角色权限
+    @GetMapping("/getRolesByOrgIdAndUserId")
+    public Result getRolesByOrgIdAndUserId(Integer orgId,Integer userId){
+        if(orgId==null){
+            return Result.error("请选择组织机构");
+        }
+        //先查询所有的角色
+        Map<String,Object> map = roleService.getRolesByOrgIdAndUserId(orgId,userId);
+        return Result.ok("查询角色成功",map);
+    }
+
 }

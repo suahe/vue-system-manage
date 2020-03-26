@@ -2,14 +2,14 @@ package com.example.manageSystem.admin.module.user.controller;
 
 import com.example.common.entity.response.PageResult;
 import com.example.common.entity.response.Result;
+import com.example.common.entity.response.StatusCode;
 import com.example.manageSystem.admin.model.User;
 import com.example.manageSystem.admin.module.user.service.UserService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RequestMapping("/sys/user")
 @RestController
@@ -33,4 +33,36 @@ public class UserController {
         return Result.ok("查询成功",user);
     }
 
+    @GetMapping("/getUserAndRolesById")
+    public Result getUserAndRolesById(@RequestParam("userId") Integer userId,@RequestParam("orgId") Integer orgId){
+        Map<String,Object> map = userService.getUserAndRolesById(userId,orgId);
+        return Result.ok("查询成功",map);
+    }
+
+    @PostMapping("/addUser")
+    public Result addUser(@RequestBody User user){
+        if(userService.addUser(user)){
+            return Result.ok("添加成功",user);
+        }else{
+            return Result.error(StatusCode.ADDERROR,"添加失败");
+        }
+    }
+
+    @PostMapping("/editUser")
+    public Result editUser(@RequestBody User user){
+        if(userService.editUser(user)){
+            return Result.ok("编辑成功",user);
+        }else{
+            return Result.error(StatusCode.EIDTERROR,"编辑成功");
+        }
+    }
+
+    @GetMapping("/del")
+    public Result del(Integer userId){
+        if(userService.del(userId)){
+            return Result.ok("删除成功");
+        }else{
+            return Result.error(StatusCode.DELETEERROR,"删除失败");
+        }
+    }
 }
