@@ -42,7 +42,6 @@ public class LoginController {
     }
 
    /* @RequestMapping("/")
-    @ResponseBody
     public String index() {
         return "no permission";
     }*/

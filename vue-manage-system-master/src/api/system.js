@@ -113,3 +113,8 @@ export const getOrgAndUsersByOrgId = orgId =>{
 export const delUserByUserId = (userId) =>{
   return http.requestQuickGet(apiUrl+'/sys/user/del?userId='+userId);
 };
+
+/**重置用户密码*/
+export const resetPassword=(userId)=>{
+  return http.requestQuickGet(apiUrl+'/sys/user/resetPassword?userId='+userId);
+};

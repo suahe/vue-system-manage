@@ -18,10 +18,10 @@
          DELETE FROM sys_role  WHERE  role_id IN (SELECT role_id FROM sys_user_role WHERE user_id = #{userId})
     </delete>
 
-    <select id="getByRoleNameList" parameterType="list" resultType="com.example.manageSystem.admin.model.Role">
+    <select id="getByRoleNameList"  parameterType="java.util.List" resultType="com.example.manageSystem.admin.model.Role">
         select * from sys_role where  role_name in
         <foreach collection="roleNameList" item="item" open="(" separator="," close=")">
-            #(item)
+            #{item}
         </foreach>
     </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.example.manageSystem.admin.module.user.service;
 
+import com.example.common.utils.MD5Utils;
 import com.example.manageSystem.admin.model.Role;
 import com.example.manageSystem.admin.model.User;
 import com.example.manageSystem.admin.module.role.service.RoleService;
@@ -77,8 +78,8 @@ public class UserService {
         if (DbUser!=null){
             throw new RuntimeException("用户名称已存在");
         }
-        //删除用户的角色
-        roleService.delByUserId(user.getUserId());
+        //删除用户和角色中间表
+        this.delUserAndRoleByUserId(user.getUserId());
         //再添加勾选的角色列表（根据角色名称列表，查询角色列表）
         if(user.getCheckedRoles()!=null&&user.getCheckedRoles().size()>0){
             List<Role> checkedRoles = roleService.getByRoleNameList(user.getCheckedRoles());
@@ -87,7 +88,9 @@ public class UserService {
             for (Role role : checkedRoles) {
                 roleIds.add(role.getRoleId());
             }
-            userDao.addUserRoles(user.getUserId(),roleIds);
+            if(roleIds.size()>0){
+                userDao.addUserRoles(user.getUserId(),roleIds);
+            }
         }
 
         int i = userDao.updateByPrimaryKey(user);
@@ -116,17 +119,19 @@ public class UserService {
     @Transactional
     public boolean del(Integer userId) {
         int i = userDao.deleteByPrimaryKey(userId);
-        int x = delUserAndRoleByUserId(userId);
         int y = delUserAndRoleByUserId(userId);
-        return i+x+y>0;
+        return i+y>0;
     }
 
     //删除用户和角色的中间表
     public int delUserAndRoleByUserId(Integer userId) {
         return userDao.delUserAndRoleByUserId(userId);
     }
-    //删除用户和组织的中间表
-    public int delUserAndOrgByUserId(Integer userId){
-        return userDao.delUserAndOrgByUserId(userId);
+
+    public boolean resetPassword(Integer userId) {
+        User DbUser = this.findById(userId);
+        DbUser.setPassword(MD5Utils.getMD5("123456"));
+        int i = userDao.updateByPrimaryKey(DbUser);
+        return i>0;
     }
 }

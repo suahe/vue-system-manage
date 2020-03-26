@@ -16,5 +16,5 @@ public interface RoleDao extends Mapper<Role> {
 
     int delByUserId(Integer userId);
 
-    List<Role> getByRoleNameList(List<String> roleNameList);
+    List<Role> getByRoleNameList(@Param("roleNameList") List<String> roleNameList);
 }

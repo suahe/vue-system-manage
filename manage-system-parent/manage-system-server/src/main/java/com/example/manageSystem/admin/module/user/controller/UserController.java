@@ -65,4 +65,13 @@ public class UserController {
             return Result.error(StatusCode.DELETEERROR,"删除失败");
         }
     }
+
+    @GetMapping("/resetPassword")
+    public Result resetPassword(Integer userId){
+        if(userService.resetPassword(userId)){
+            return Result.ok("重置成功");
+        }else{
+            return Result.error(StatusCode.RESETERROR,"重置失败");
+        }
+    }
 }

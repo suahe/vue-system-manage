@@ -76,6 +76,7 @@ export default {
         // 侧边栏折叠
         collapseChage() {
             this.collapse = !this.collapse;
+            this.global.menuCollapse = this.collapse;//设置全局变量
             bus.$emit('collapse', this.collapse);
         },
         // 全屏事件

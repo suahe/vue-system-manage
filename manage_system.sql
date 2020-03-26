@@ -25,14 +25,16 @@ CREATE TABLE `sys_user` (
   `name` varchar(255) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '姓名',
   `username` varchar(50) NOT NULL COMMENT '用户名',
   `password` varchar(100) DEFAULT NULL COMMENT '密码',
+  `sex` bigint(4) DEFAULT '1' COMMENT '性别',
   `salt` varchar(20) DEFAULT NULL COMMENT '盐',
   `email` varchar(100) DEFAULT NULL COMMENT '邮箱',
   `mobile` varchar(100) DEFAULT NULL COMMENT '手机号',
   `status` tinyint(4) DEFAULT '1' COMMENT '状态  0：禁用   1：正常',
+  `org_id` bigint(20) DEFAULT NULL COMMENT '组织机构ID',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COMMENT='系统用户';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='系统用户'
 
 -- 角色表
 DROP TABLE IF EXISTS `sys_role`;
@@ -95,15 +97,6 @@ CREATE TABLE SYS_ORG
   remark            VARCHAR(1000) COMMENT '备注'
 )
 
-
--- 用户和组织机构中间表
-
-DROP TABLE IF EXISTS `SYS_ORG_USER`;
-CREATE TABLE SYS_ORG_USER(
-  id          BIGINT(20) NOT NULL,
-  user_id     BIGINT(20) COMMENT '用户ID',
-  org_id      BIGINT(20) COMMENT '组织机构ID'
-)
 
 
 -- 操作日志表

@@ -11,7 +11,6 @@ public interface UserDao  extends Mapper<User> {
 
     int addUserRoles(@Param("userId") Integer userId,@Param("roleIds") List<Integer> roleIds);
 
-    int delUserAndOrgByUserId(Integer userId);
-
     int delUserAndRoleByUserId(Integer userId);
+
 }

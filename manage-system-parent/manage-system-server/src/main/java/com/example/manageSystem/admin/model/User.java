@@ -22,13 +22,14 @@ public class User implements Serializable {
     private String salt;//盐
     private String email;//邮箱
     private String mobile;//手机号
+    private Integer orgId;//组织机构id
     private Short status; //状态 0：禁用 1：正常
     private Date createTime;//创建时间
-
     @Transient
     private String roleNames;//角色字符串
     @Transient
     private List<String> checkedRoles;//选择的角色名称集合
+
 
     public Integer getUserId() {
         return userId;
@@ -94,6 +95,14 @@ public class User implements Serializable {
         this.mobile = mobile;
     }
 
+    public Integer getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Integer orgId) {
+        this.orgId = orgId;
+    }
+
     public Short getStatus() {
         return status;
     }
@@ -125,4 +134,6 @@ public class User implements Serializable {
     public void setCheckedRoles(List<String> checkedRoles) {
         this.checkedRoles = checkedRoles;
     }
+
+
 }

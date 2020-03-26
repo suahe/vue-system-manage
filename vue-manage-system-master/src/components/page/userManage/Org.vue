@@ -68,10 +68,13 @@
                             <el-table-column prop="roleNames" label="角色" align="center"></el-table-column>
                             <el-table-column prop="mobile" label="联系电话" align="center"></el-table-column>
                             <el-table-column prop="email" label="邮箱地址" align="center"></el-table-column>
-                            <el-table-column label="操作" width="180" align="center">
+                            <el-table-column label="操作" width="250" align="center">
                                 <template slot-scope="scope">
                                     <el-button type="text" icon="el-icon-edit"
                                                @click="handleEdit(scope.$index, scope.row)">编辑
+                                    </el-button>
+                                    <el-button type="text" icon="el-icon-lx-forward" class="red"
+                                               @click="resetPassword(scope.$index, scope.row)">重置密码
                                     </el-button>
                                     <el-button type="text" icon="el-icon-delete" class="red"
                                                @click="handleDelete(scope.$index, scope.row)">删除
@@ -91,7 +94,7 @@
 
                         <!-- 新增弹出框 -->
                         <el-dialog title="新增" :visible.sync="addVisible" width="30%">
-                            <el-form :model="userForm" :rules="userRules" ref="ruleUserForm" label-width="80px">
+                            <el-form :model="userForm" :rules="userRules" ref="userRulesForm" label-width="80px">
                                 <el-form-item prop="username" label="用户名称">
                                     <el-input v-model="userForm.username"></el-input>
                                 </el-form-item>
@@ -111,13 +114,15 @@
                                 <!-- 使用<el-checkbox label="复选框 A"></el-checkbox>复选框不行-->
                                 <el-form-item label="角色">
                                     <el-checkbox-group v-model="checkedRoles">
-                                        <el-checkbox v-for="role in roles" :label="role.roleName" :key="role.roleId">{{role.roleName}}</el-checkbox>
+                                        <el-checkbox v-for="role in roles" :label="role.roleName" :key="role.roleId">
+                                            {{role.roleName}}
+                                        </el-checkbox>
                                     </el-checkbox-group>
                                 </el-form-item>
-                                <el-form-item label="联系方式">
+                                <el-form-item prop="mobile" label="联系方式">
                                     <el-input v-model="userForm.mobile"></el-input>
                                 </el-form-item>
-                                <el-form-item label="邮箱">
+                                <el-form-item prop="email" label="邮箱">
                                     <el-input v-model="userForm.email"></el-input>
                                 </el-form-item>
                             </el-form>
@@ -130,7 +135,7 @@
 
                         <!-- 编辑弹出框 -->
                         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-                            <el-form :model="userForm" :rules="userRules" ref="ruleUserForm" label-width="80px">
+                            <el-form :model="userForm" :rules="userRules" ref="userRulesForm" label-width="80px">
                                 <el-form-item prop="username" label="用户名称">
                                     <el-input v-model="userForm.username"></el-input>
                                 </el-form-item>
@@ -138,33 +143,37 @@
                                     <el-input v-model="userForm.name"></el-input>
                                 </el-form-item>
                                 <!--<el-form-item prop="password"  label="密码">
-                                    <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
+                                    <el-input v-model="form.password" autocomplete="off"></el-input>
                                 </el-form-item>
                                 <el-form-item prop="checkPassword" label="确认密码">
                                     <el-input type="password" v-model="form.checkPassword" autocomplete="off"></el-input>
                                 </el-form-item>-->
-                                <el-form-item prop="radio" label="性别">
+                                <el-form-item prop="sex" label="性别">
                                     <el-radio v-model="radio" label="1">男</el-radio>
                                     <el-radio v-model="radio" label="2">女</el-radio>
                                 </el-form-item>
                                 <!-- 使用<el-checkbox label="复选框 A"></el-checkbox>复选框不行-->
-                                <el-form-item label="角色" prop="checkedRoles">
+                                <el-form-item label="角色">
                                     <el-checkbox-group v-model="checkedRoles">
-                                        <el-checkbox v-for="role in roles" :label="role.roleName" :key="role.roleId">{{role.roleName}}</el-checkbox>
+                                        <el-checkbox v-for="role in roles" :label="role.roleName" :key="role.roleId">
+                                            {{role.roleName}}
+                                        </el-checkbox>
                                     </el-checkbox-group>
                                 </el-form-item>
-                                <el-form-item label="联系方式">
+                                <el-form-item prop="mobile" label="联系方式">
                                     <el-input v-model="userForm.mobile"></el-input>
                                 </el-form-item>
-                                <el-form-item label="邮箱">
+                                <el-form-item prop="email" label="邮箱">
                                     <el-input v-model="userForm.email"></el-input>
                                 </el-form-item>
                             </el-form>
+
                             <span slot="footer" class="dialog-footer">
                                 <el-button @click="editVisible = false">取 消</el-button>
                                 <el-button type="primary" @click="saveEdit">确 定</el-button>
-                             </span>
+                            </span>
                         </el-dialog>
+
                     </el-tab-pane>
                 </el-tabs>
             </el-container>
@@ -174,15 +183,14 @@
 
 <script>
     import {
-        getOrgTree, getUsersByOrgId,getUserAndRolesById,getRolesByOrgIdAndUserId,
-        getOrgAndUsersByOrgId,editUser,addUser,delUserByUserId
+        getOrgTree, getUsersByOrgId, getUserAndRolesById, getRolesByOrgIdAndUserId,
+        getOrgAndUsersByOrgId, editUser, addUser, delUserByUserId,resetPassword
     } from '@/api/system';
 
     export default {
 
         data() {
-            const roleOptions = [{roleId:1,roleName:'上海'}, {roleId:2,roleName:'北京'}, {roleId:3,roleName:'广州'}, {roleId:4,roleName:'深圳'}];
-            var validatePass = (rule, value, callback) => {
+            /*var validatePass = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请输入密码'));
                 } else {
@@ -200,10 +208,38 @@
                 } else {
                     callback();
                 }
+            };*/
+            //校验是否选择角色
+            var validaCheckRoles = (rule, value, callback) => {
+                if (this.checkedRoles.length == 0) {
+                    callback(new Error('请选择角色'));
+                }
+            };
+            //电话可以不填，填就要校验
+            var checkPhone = (rule, value, callback) => {
+                const phoneReg = /^1[3|4|5|7|8][0-9]{9}$/;
+                if (value) {
+                    if (phoneReg.test(value)) {
+                        callback();
+                    } else {
+                        callback(new Error('电话号码格式不正确'));
+                    }
+                }
+            };
+            //邮箱可以不填，填就要校验
+            var checkEmail = (rule, value, callback) => {
+                const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+                if (value) {
+                    if (mailReg.test(value)) {
+                        callback();
+                    } else {
+                        callback(new Error('请输入正确的邮箱格式'));
+                    }
+                }
             };
             return {
-                checkedRoles: ['上海', '北京'],
-                roles: roleOptions,
+                checkedRoles: [],
+                roles: [],
                 query: {
                     orgId: '',
                     username: '',
@@ -214,23 +250,22 @@
                 tableData: [],
                 activeName: 'first',
                 userForm: {},
-                orgForm:{},
-                radio:'1',
+                orgForm: {},
+                radio: '1',
                 menuVisible: false,
                 treeData: [],
                 defaultProps: {
                     children: 'children',
                     label: 'orgName'
                 },
-                editVisible:false,
-                addVisible:false,
+                editVisible: false,
+                addVisible: false,
                 userRules: {
-                    username:[{ required: true, message: '请输入用户名称', trigger: 'blur' }],
-                    name:[{ required: true, message: '请输入真实姓名', trigger: 'blur' }],
-                    password: [{ validator: validatePass, trigger: 'blur' }],
-                    checkPassword: [{ validator: validatePass2, trigger: 'blur' }],
-                    radio:[{ required: true, message: '请选择性别', trigger: 'blur' }],
-                    checkRoles:[{ required: true, message: '请选择角色', trigger: 'blur' }],
+                    username: [{ required: true, message: '请输入用户名称', trigger: 'blur' }],
+                    name: [{ required: true, message: '请输入真实姓名', trigger: 'blur' }],
+                    checkedRoles: [{ validator: validaCheckRoles, message: '请选择角色', trigger: 'blur' }],
+                    email: [{ validator: checkEmail, trigger: 'blur' }],
+                    mobile: [{ validator: checkPhone, trigger: 'blur' }]
                 }
             };
         },
@@ -263,14 +298,14 @@
             handleNodeClick(data) {
                 console.log(data);
                 this.query.orgId = data.orgId;//赋值
-                getOrgAndUsersByOrgId(this.query.orgId).then(res=>{
-                    if (res.flag){
+                getOrgAndUsersByOrgId(this.query.orgId).then(res => {
+                    if (res.flag) {
                         this.orgForm = res.data.org;
                         this.tableData = res.data.users;
-                    }else {
-                        this.$message.error(res.message)
+                    } else {
+                        this.$message.error(res.message);
                     }
-                })
+                });
             },
             rightClick(MouseEvent, object, Node, element) { // 鼠标右击触发事件
                 this.menuVisible = false; // 先把模态框关死，目的是 第二次或者第n次右键鼠标的时候 它默认的是true
@@ -278,8 +313,18 @@
                 var menu = document.querySelector('#menu');
                 document.addEventListener('click', this.foo); // 给整个document添加监听鼠标事件，点击任何位置执行foo方法
                 menu.style.display = 'block';
-                menu.style.left = MouseEvent.clientX - 0 + 'px';
-                menu.style.top = MouseEvent.clientY - 80 + 'px';
+
+                let  menuColl = this.global.menuCollapse;//菜单收缩情况，为true是收缩
+                if(menuColl){
+                    debugger;
+                    menu.style.left = MouseEvent.clientX - 46 + 'px';
+                    menu.style.top = MouseEvent.clientY - 80 + 'px';
+                }else {
+                    debugger;
+                    menu.style.left = MouseEvent.clientX  - 233 +'px';
+                    menu.style.top = MouseEvent.clientY - 80 + 'px';
+                }
+
                 console.log('右键被点击的event:', MouseEvent);
                 console.log('右键被点击的object:', object);
                 console.log('右键被点击的value:', Node);
@@ -304,81 +349,134 @@
             //新增窗口
             handleAdd() {
                 this.userForm = {};
-                if(!this.query.orgId){
-                    this.$message.error("请选择组织机构");
-                    return
+                if (!this.query.orgId) {
+                    this.$message.error('请选择组织机构');
+                    return;
                 }
-                getRolesByOrgIdAndUserId(this.query.orgId).then(res=>{
-                    if(res.flag){
+                getRolesByOrgIdAndUserId(this.query.orgId).then(res => {
+                    if (res.flag) {
                         this.roles = res.data.roles;
                         this.checkedRoles = res.data.checkedRoles;
                         this.editVisible = false;
                         this.addVisible = true;
-                    }else {
-                        this.$message.error(res.message)
+                    } else {
+                        this.$message.error(res.message);
                     }
-                })
+                });
             },
             //编辑窗口
             handleEdit(index, row) {
                 this.idx = index;
                 this.userForm = row;
-                getUserAndRolesById({userId:row.userId,orgId:this.query.orgId}).then(res=>{
-                    if(res.flag){
+                getUserAndRolesById({ userId: row.userId, orgId: this.query.orgId }).then(res => {
+                    if (res.flag) {
                         this.userForm = res.data.user;
-                        this.radio = res.data.user.sex+'';
+                        this.radio = res.data.user.sex + '';
                         this.roles = res.data.roles;
                         this.checkedRoles = res.data.checkedRoles;
                         this.addVisible = false;
                         this.editVisible = true;
-                    }else {
+                    } else {
                         this.$message.error(res.message);
                     }
-                })
+                });
             },
             //新增操作
             saveAdd() {
+                this.userForm.orgId = this.query.orgId;
                 this.userForm.sex = this.radio;//设置性别
-                addUser(this.userForm).then(res=>{
-                    if (res.flag) {
-                        this.$message.success(res.message);
-                        this.editVisible = false;
-                        this.gettableData();
-                    }else {
-                        this.$message.error(res.message);
-                        console.log(res.message);
+                this.$refs.userRulesForm.validate(valid => {
+                    if (valid) {
+                        addUser(this.userForm).then(res => {
+                            if (res.flag) {
+                                this.$message.success(res.message);
+                                this.addVisible = false;
+                                this.gettableData();
+                            } else {
+                                this.$message.error(res.message);
+                                console.log(res.message);
+                                return false;
+                            }
+                        });
+                    } else {
+                        this.$message.error('请填写表单信息');
                         return false;
                     }
-                    this.addVisible = false;
-                    this.gettableData();
-                })
+                });
             },
             //编辑操作
             saveEdit() {
+                debugger
+                this.userForm.orgId = this.query.orgId;
                 this.userForm.sex = this.radio;//设置性别
-                this.userForm.checkedRoles = this.checkedRoles;//勾选的角色
-                editUser(this.userForm).then(res=>{
-                    if (res.flag) {
-                        this.$message.success(res.message);
-                        this.editVisible = false;
-                        this.gettableData();
-                    }else {
-                        this.$message.error(res.message);
-                        console.log(res.message);
+                this.userForm.checkedRoles = this.checkedRoles;
+                //表达校验失效this.$refs.userRulesForm.validate()，采用代码校验
+                if(!this.validaData()){
+                    return false;
+                }
+                /*this.$refs.userRulesForm.validate(valid => {
+                    if (valid) {*/
+                        editUser(this.userForm).then(res => {
+                            if (res.flag) {
+                                this.$message.success(res.message);
+                                this.editVisible = false;
+                                this.gettableData();
+                            } else {
+                                this.$message.error(res.message);
+                                console.log(res.message);
+                                return false;
+                            }
+                        });
+                    /*} else {
+                        this.$message.error('请填写表单信息');
                         return false;
                     }
-
+                });*/
+            },
+            validaData(){
+                if(!this.userForm.username){
+                    this.$message.error("请输入用户名称")
+                    return false;
+                }
+                if(!this.userForm.name){
+                    this.$message.error("请输入真实姓名")
+                    return false;
+                }
+                if(!this.userForm.sex){
+                    this.$message.error("请选择性别")
+                    return
+                }
+                if(!this.userForm.checkedRoles||this.userForm.checkedRoles.length==0){
+                    this.$message.error("请选择角色")
+                    return false;
+                }
+                return true;
+            },
+            handleDelete(index, row) {
+                this.$confirm('确定要批量删除吗？', '提示', {
+                    type: 'warning'
+                }).then(() => {
+                    delUserByUserId(row.userId).then(res => {
+                        if (res.flag) {
+                            this.$message.success('删除了' + row.username);
+                            this.gettableData();
+                        } else {
+                            this.$message.error(res.message);
+                        }
+                    });
+                }).catch(() => {
                 });
             },
-            handleDelete(index, row){
-                delUserByUserId(row.userId).then(res=>{
-                    if(res.flag){
-                        this.$message.success("删除了"+row.getusername);
-                        this.gettableData();
-                    }else {
-                        this.$message.error(res.message)
-                    }
-                })
+            resetPassword(index, row) {
+                //密码重置为123456
+                this.$confirm('确定要重置密码为123456？', '提示', {
+                    type: 'warning'
+                }).then(() => {
+                    resetPassword(row.userId).then(res => {
+
+                    });
+                }).catch(() => {
+                });
             }
         }
     };
