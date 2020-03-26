@@ -342,6 +342,8 @@
                 addUser(this.userForm).then(res=>{
                     if (res.flag) {
                         this.$message.success(res.message);
+                        this.editVisible = false;
+                        this.gettableData();
                     }else {
                         this.$message.error(res.message);
                         console.log(res.message);
@@ -358,19 +360,21 @@
                 editUser(this.userForm).then(res=>{
                     if (res.flag) {
                         this.$message.success(res.message);
+                        this.editVisible = false;
+                        this.gettableData();
                     }else {
                         this.$message.error(res.message);
                         console.log(res.message);
                         return false;
                     }
-                    this.editVisible = false;
-                    this.gettableData();
+
                 });
             },
             handleDelete(index, row){
                 delUserByUserId(row.userId).then(res=>{
                     if(res.flag){
                         this.$message.success("删除了"+row.getusername);
+                        this.gettableData();
                     }else {
                         this.$message.error(res.message)
                     }
