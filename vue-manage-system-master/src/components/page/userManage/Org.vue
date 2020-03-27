@@ -2,7 +2,7 @@
     <div>
         <el-container style="border: 1px solid #eee">
             <!--树形结构-->
-            <!--<el-tree style="width:20%;background-color: rgb(238, 241, 246)"
+            <!--<el-tree style="width:20%;background-color: rgb(238, 241, 246)" 
                      :data="treeData"
                      :props="defaultProps"
                      default-expand-all
