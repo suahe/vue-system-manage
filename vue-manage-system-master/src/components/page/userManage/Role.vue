@@ -413,11 +413,11 @@
                 this.$refs.tree.setCheckedKeys([]);
             },
             validaRoleData(){
-                if(this.form.industryCategory){
+                if(!this.form.industryCategory){
                     this.$message.error("请选择行业类型")
                     return false;
                 }
-                if(this.form.roleName){
+                if(!this.form.roleName){
                     this.$message.error("请输入角色名称")
                     return false;
                 }
