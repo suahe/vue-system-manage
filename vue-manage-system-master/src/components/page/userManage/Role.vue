@@ -23,6 +23,7 @@
                     @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="roleId" label="ID" width="55" align="center"></el-table-column>
+                <el-table-column prop="industryCategory" label="行业类型" align="center"></el-table-column>
                 <el-table-column prop="roleName" label="角色名称" align="center"></el-table-column>
                 <el-table-column prop="remark" label="备注" align="center"></el-table-column>
                 <el-table-column prop="createTime" :formatter="formatDate" label="创建时间" align="center"></el-table-column>
@@ -47,6 +48,12 @@
         <!-- 新增弹出框 -->
         <el-dialog title="新增" :visible.sync="addVisible" width="30%">
             <el-form :model="form" :rules="rules" ref="ruleForm" label-width="80px">
+                <el-form-item  prop="industryCategory"  label="行业类型">
+                    <!--@click.native="queryIndustryCategoryList('industryCategory')"-->
+                    <el-select  v-model="form.industryCategory" placeholder="请选择行业类型" style="width: 100%" >
+                        <el-option v-for="(item,index) in industryCategoryList" :key="index" :label="item.name" :value="item.value"></el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item prop="roleName" label="角色名称">
                     <el-input v-model="form.roleName"></el-input>
                 </el-form-item>
@@ -63,6 +70,12 @@
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
             <el-form  :model="form" :rules="rules" ref="ruleForm" label-width="80px">
+                <el-form-item  prop="industryCategory" label="行业类型">
+                    <!--@click.native="queryIndustryCategoryList('industryCategory')"-->
+                    <el-select  v-model="form.industryCategory" placeholder="请选择行业类型" style="width: 100%" >
+                        <el-option v-for="(item,index) in industryCategoryList" :key="index" :label="item.name" :value="item.value"></el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item prop="roleName" label="角色名称">
                     <el-input v-model="form.roleName"></el-input>
                 </el-form-item>
@@ -108,9 +121,14 @@
 </template>
 
 <script>
-    import {getRoleList,addRole,getRoleById,editRole,delRole,delRoleByIds,getMenuTreeByRoleId,saveRolePerms} from '@/api/system'
+    import {getRoleList,addRole,getRoleById,editRole,delRole,delRoleByIds,getMenuTreeByRoleId,saveRolePerms,getDictsByParentCode} from '@/api/system'
     export default {
         data:function(){
+            var validaIndustryCategory = function(rule, value, callback) {
+                if (!this.form.industryCategory) {
+                    callback(new Error('请选择行业类型'));
+                }
+            };
             return {
                 query: {
                     roleName: '',
@@ -129,7 +147,9 @@
                 id: -1,
                 ids:[],
                 menus:[],
+                industryCategoryList:[],
                 rules: {
+                    industryCategory: [{ validator: validaIndustryCategory, trigger: 'blur' }],
                     roleName: [{ required: true, message: '请输入角色名称', trigger: 'blur' }]
                 },
                 //权限
@@ -195,6 +215,14 @@
                     this.tableData = res.rows;
                     this.pageTotal = res.total;
                 })
+                //查询行业类型下拉框
+                getDictsByParentCode('industryCategory').then(res=>{
+                    if(res.flag){
+                        this.industryCategoryList = res.data;
+                    }else {
+                        this.$message.error(res.message);
+                    }
+                })
             },
             //触发搜索按钮
             handleSearch() {
@@ -207,7 +235,7 @@
                 this.$confirm('确定要删除吗？', '提示', {
                     type: 'warning'
                 }).then(() => {
-                        delRole(row.role_id).then(res=>{
+                        delRole(row.roleId).then(res=>{
                             if(res.flag){
                                 this.$message.success(res.message);
                             }else {
@@ -227,7 +255,7 @@
                 this.delList = this.delList.concat(this.multipleSelection);
                 for (let i = 0; i < length; i++) {
                     str += this.multipleSelection[i].role_name + ',';
-                    this.ids[i] = this.multipleSelection[i].role_id;
+                    this.ids[i] = this.multipleSelection[i].roleId;
                 }
                 if (length>0){
                     //二次确认删除
@@ -271,45 +299,52 @@
             },
             //新增操作
             saveAdd() {
-                this.$refs.ruleForm.validate(valid => {
-                    if (valid) {
-                        addRole(this.form).then(res=>{
-                            if (res.flag) {
-                                this.$message.success(res.message);
-                            }else {
-                                this.$message.error(res.message);
-                                console.log(res.message);
-                                return false;
-                            }
-                            this.addVisible = false;
-                            this.getData();
-                        })
-                    } else {
-                        this.$message.error('请输入角色名称');
+                debugger
+                if(!this.validaRoleData()){
+                    return
+                }
+                /*this.$refs.ruleForm.validate(valid => {
+                    if (valid) {*/
+                addRole(this.form).then(res=>{
+                    if (res.flag) {
+                        this.$message.success(res.message);
+                    }else {
+                        this.$message.error(res.message);
+                        console.log(res.message);
                         return false;
                     }
-                });
+                    this.addVisible = false;
+                    this.getData();
+                })
+                   /* } else {
+                        this.$message.error('请填写表单信息');
+                        return false;
+                    }
+                });*/
             },
             //编辑操作
             saveEdit() {
-                this.$refs.ruleForm.validate(valid => {
-                    if (valid) {
-                        editRole(this.form).then(res=>{
-                            if (res.flag) {
-                                this.$message.success(res.message);
-                            }else {
-                                this.$message.error(res.message);
-                                console.log(res.message);
-                                return false;
-                            }
-                            this.editVisible = false;
-                            this.getData();
-                        });
-                    } else {
-                        this.$message.error('请输入角色名称');
+                /*this.$refs.ruleForm.validate(valid => {
+                    if (valid) {*/
+                if(!this.validaRoleData()){
+                    return
+                }
+                editRole(this.form).then(res=>{
+                    if (res.flag) {
+                        this.$message.success(res.message);
+                    }else {
+                        this.$message.error(res.message);
+                        console.log(res.message);
                         return false;
                     }
+                    this.editVisible = false;
+                    this.getData();
                 });
+                    /*} else {
+                        this.$message.error('请填写表单信息');
+                        return false;
+                    }
+                });*/
             },
             //分页导航
             handlePageChange(val) {
@@ -376,6 +411,16 @@
             },
             resetChecked() {
                 this.$refs.tree.setCheckedKeys([]);
+            },
+            validaRoleData(){
+                if(this.form.industryCategory){
+                    this.$message.error("请选择行业类型")
+                    return false;
+                }
+                if(this.form.roleName){
+                    this.$message.error("请输入角色名称")
+                    return false;
+                }
             }
         }
     };

@@ -6,10 +6,11 @@ import com.example.manageSystem.admin.module.org.dao.OrgDao;
 import com.example.manageSystem.admin.module.user.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class OrgService {
@@ -73,4 +74,63 @@ public class OrgService {
         return map;
     }
 
+    @Transactional
+    public boolean addOrg(Org org) {
+        Org DbOrg = findOrgByOrgName(org.getOrgName());
+        if(DbOrg!=null){
+            throw new RuntimeException("该组织机构名称已存在");
+        }
+        org.setOrgCode(createOrgCode());
+        int i = orgDao.insert(org);
+        return i>0;
+    }
+
+    @Transactional
+    public boolean editOrg(Org org) {
+        Org DbOrg = this.findById(org.getOrgId());
+        if(DbOrg==null){
+            throw new RuntimeException("该组织机构不存在");
+        }
+        DbOrg = findOrgByOrgName(org.getOrgId(),org.getOrgName());
+        if(DbOrg!=null){
+            throw new RuntimeException("该组织机构名称已存在");
+        }
+        int i = orgDao.updateByPrimaryKey(org);
+        return i>0;
+    }
+
+
+    public Org findOrgByOrgName(String orgName){
+        Example example = new Example(Org.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("orgName",orgName);
+        return orgDao.selectOneByExample(example);
+    }
+    public Org findOrgByOrgName(Integer orgId , String orgName){
+        Example example = new Example(Org.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("orgName",orgName);
+        criteria.andNotEqualTo("orgId",orgId);
+        return orgDao.selectOneByExample(example);
+    }
+
+    public boolean del(Integer orgId) {
+        int i = orgDao.deleteByPrimaryKey(orgId);
+        return i>0;
+    }
+
+    public List<User> getUsersByOrgId(Integer orgId) {
+        return userDao.getUsersByOrgId(orgId,null);
+    }
+
+    public List<Org> getOrgList() {
+        return orgDao.selectAll();
+    }
+
+    public String createOrgCode(){
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+        String dateStr = format.format(new Date());
+        String strCode = "SJ"+dateStr+(int)((Math.random()*9+1)*10000);
+        return strCode;
+    }
 }

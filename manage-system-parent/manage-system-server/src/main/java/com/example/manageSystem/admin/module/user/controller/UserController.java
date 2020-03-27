@@ -66,6 +66,15 @@ public class UserController {
         }
     }
 
+    @GetMapping("/delUserByIds")
+    public Result delUserByIds(Integer[] ids){
+        if(userService.delUserByIds(ids)){
+            return Result.ok("删除成功");
+        }else{
+            return Result.error(StatusCode.DELETEERROR,"删除失败");
+        }
+    }
+
     @GetMapping("/resetPassword")
     public Result resetPassword(Integer userId){
         if(userService.resetPassword(userId)){

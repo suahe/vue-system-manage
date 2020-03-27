@@ -52,6 +52,8 @@ public class UserService {
         }
         user.setStatus((short)1);//0：禁用 1：正常
         user.setCreateTime(new Date());
+        String password = MD5Utils.getMD5(user.getPassword());
+        user.setPassword(password);
         int i = userDao.insert(user);
         //再插入角色和用户的中间表
         int y = 0;
@@ -92,7 +94,9 @@ public class UserService {
                 userDao.addUserRoles(user.getUserId(),roleIds);
             }
         }
-
+        //对密码进行加密
+        String password = MD5Utils.getMD5(user.getPassword());
+        user.setPassword(password);
         int i = userDao.updateByPrimaryKey(user);
         return i>0;
     }
@@ -133,5 +137,14 @@ public class UserService {
         DbUser.setPassword(MD5Utils.getMD5("123456"));
         int i = userDao.updateByPrimaryKey(DbUser);
         return i>0;
+    }
+
+    @Transactional
+    public boolean delUserByIds(Integer[] ids) {
+        boolean bo = true;
+        for (Integer id : ids) {
+            bo = this.del(id);
+        }
+        return bo;
     }
 }

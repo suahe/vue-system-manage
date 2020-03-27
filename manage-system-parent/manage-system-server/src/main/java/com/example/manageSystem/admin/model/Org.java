@@ -3,6 +3,7 @@ package com.example.manageSystem.admin.model;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,7 +16,6 @@ public class Org implements Serializable {
     @Id
     private  Integer orgId ;//
     private  Integer parentId ;//上级ID
-    @Column(name = "org_code")
     private  String orgCode ;//部门编码
     private  String industryCategory ;//行业类型
     private  String orgName ;//部门名称
@@ -24,8 +24,9 @@ public class Org implements Serializable {
     private  String county ;//所属区
     private  String street;//所属街道/镇
     private  String neighborhood;//所属居委会/村
+    @Transient
     private  Integer itemId ;//项目id
-
+    @Transient
     private List<Org> children = new ArrayList<Org>();
 
     public Integer getOrgId() {

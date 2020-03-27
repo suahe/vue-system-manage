@@ -103,7 +103,7 @@ export const getRolesByOrgIdAndUserId = (orgId) =>{
   return http.requestQuickGet(apiUrl+'/sys/role/getRolesByOrgIdAndUserId?orgId='+orgId);
 };
 
-/**根据组织机构id查询机构*/
+/**根据组织机构和用户列表id查询机构*/
 export const getOrgAndUsersByOrgId = orgId =>{
     return http.requestQuickGet(apiUrl+'/sys/org/getOrgAndUsersByOrgId?orgId='+orgId);
 };
@@ -117,3 +117,38 @@ export const delUserByUserId = (userId) =>{
 export const resetPassword=(userId)=>{
   return http.requestQuickGet(apiUrl+'/sys/user/resetPassword?userId='+userId);
 };
+
+/**根据字典父code查询子列表*/
+export const getDictsByParentCode = (parentCode) =>{
+  return http.requestQuickGet(apiUrl+'/sys/dict/getDictsByParentCode?parentCode='+parentCode);
+};
+
+/** 根据组织机构id查询组织机构信息*/
+export const getOrgByOrgId = (orgId) =>{
+  return http.requestQuickGet(apiUrl+'/sys/org/findById?orgId='+orgId);
+};
+
+/** 增加组织机构*/
+export const addOrg = (params) =>{
+  return http.requestPost(apiUrl+'/sys/org/addOrg',params);
+};
+
+/** 修改组织机构*/
+export const editOrg = (params) =>{
+  return http.requestPost(apiUrl+'/sys/org/editOrg',params);
+};
+
+/** 删除组织机构*/
+export const delOrg = (orgId)=>{
+  return http.requestQuickGet(apiUrl+'/sys/org/del?orgId='+orgId);
+};
+
+/** 获取组织机构列表*/
+export const getOrgList = () =>{
+  return http.requestQuickGet(apiUrl+'/sys/org/getOrgList');
+};
+
+/**批量删除用户*/
+export const delUserByIds = (ids) =>{
+  return http.requestQuickGet(apiUrl+'/sys/user/delUserByIds?ids='+ids);
+}

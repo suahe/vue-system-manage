@@ -12,6 +12,7 @@ public class Role implements Serializable {
     @Id
     private Integer roleId ;
     private String roleName ;//角色名称
+    private String industryCategory;//行业类型
     private String remark ;//备注
     private Date createTime;//创建时间
 
@@ -29,6 +30,14 @@ public class Role implements Serializable {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    public String getIndustryCategory() {
+        return industryCategory;
+    }
+
+    public void setIndustryCategory(String industryCategory) {
+        this.industryCategory = industryCategory;
     }
 
     public String getRemark() {
