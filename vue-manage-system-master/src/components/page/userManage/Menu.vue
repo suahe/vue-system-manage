@@ -227,7 +227,6 @@
                 return data;
             },
             orderChildren(data){
-                debugger
                 for( var i =0; i< data.length-1; i++) {
                     for (var j = 0; j < data.length - i - 1; j++) {
                         //比较前一个元素与后一个元素的大小，将每趟中最大的元素放在末尾，

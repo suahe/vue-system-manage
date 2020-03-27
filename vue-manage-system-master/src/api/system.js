@@ -95,7 +95,6 @@ export const addUser = (params) =>{
 
 /**编辑用户*/
 export const editUser = (params) =>{
-  debugger
   return http.requestPost(apiUrl+'/sys/user/editUser',params);
 };
 

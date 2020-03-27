@@ -316,11 +316,9 @@
 
                 let  menuColl = this.global.menuCollapse;//菜单收缩情况，为true是收缩
                 if(menuColl){
-                    debugger;
                     menu.style.left = MouseEvent.clientX - 46 + 'px';
                     menu.style.top = MouseEvent.clientY - 80 + 'px';
                 }else {
-                    debugger;
                     menu.style.left = MouseEvent.clientX  - 233 +'px';
                     menu.style.top = MouseEvent.clientY - 80 + 'px';
                 }
@@ -385,28 +383,31 @@
             saveAdd() {
                 this.userForm.orgId = this.query.orgId;
                 this.userForm.sex = this.radio;//设置性别
-                this.$refs.userRulesForm.validate(valid => {
-                    if (valid) {
-                        addUser(this.userForm).then(res => {
-                            if (res.flag) {
-                                this.$message.success(res.message);
-                                this.addVisible = false;
-                                this.gettableData();
-                            } else {
-                                this.$message.error(res.message);
-                                console.log(res.message);
-                                return false;
-                            }
-                        });
+                this.userForm.checkedRoles = this.checkedRoles;
+               /* this.$refs.userRulesForm.validate(valid => {
+                    if (valid) {*/
+               if(!this.validaData()){
+                   return;
+               }
+               addUser(this.userForm).then(res => {
+                    if (res.flag) {
+                        this.$message.success(res.message);
+                        this.addVisible = false;
+                        this.gettableData();
                     } else {
-                        this.$message.error('请填写表单信息');
+                        this.$message.error(res.message);
+                        console.log(res.message);
                         return false;
                     }
                 });
+                   /* } else {
+                        this.$message.error('请填写表单信息');
+                        return false;
+                    }
+                });*/
             },
             //编辑操作
             saveEdit() {
-                debugger
                 this.userForm.orgId = this.query.orgId;
                 this.userForm.sex = this.radio;//设置性别
                 this.userForm.checkedRoles = this.checkedRoles;
