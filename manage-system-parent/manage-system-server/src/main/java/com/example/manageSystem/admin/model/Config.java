@@ -1,6 +1,6 @@
 package com.example.manageSystem.admin.model;
 
-import org.springframework.data.annotation.Id;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
@@ -10,7 +10,7 @@ public class Config implements Serializable {
 
     @Id
     private Integer id;
-    private String paramkey;
+    private String paramKey;
     private String paramValue;
     private Short status; //0：隐藏 1：显示
     private String remark; //备注
@@ -23,12 +23,12 @@ public class Config implements Serializable {
         this.id = id;
     }
 
-    public String getParamkey() {
-        return paramkey;
+    public String getParamKey() {
+        return paramKey;
     }
 
-    public void setParamkey(String paramkey) {
-        this.paramkey = paramkey;
+    public void setParamKey(String paramKey) {
+        this.paramKey = paramKey;
     }
 
     public String getParamValue() {

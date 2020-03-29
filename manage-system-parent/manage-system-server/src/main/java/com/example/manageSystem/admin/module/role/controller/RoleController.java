@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +60,7 @@ public class RoleController {
         if (roleService.edit(role)) {
             return Result.ok("编辑成功");
         }else {
-            return Result.error( StatusCode.ADDERROR,"编辑失败");
+            return Result.error( StatusCode.EDITERROR,"编辑失败");
         }
     }
 
@@ -115,4 +114,10 @@ public class RoleController {
         return Result.ok("查询角色成功",map);
     }
 
+
+    @GetMapping("/getRolesByOrgId")
+    public Result getRolesByOrgId(Integer orgId){
+        List<Role> roles = roleService.getRolesByOrgId(orgId);
+        return Result.ok("查询成功",roles);
+    }
 }

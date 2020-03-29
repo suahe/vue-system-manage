@@ -1,14 +1,15 @@
 package com.example.manageSystem.admin.module.org.service;
 
+import com.example.manageSystem.admin.model.Dict;
 import com.example.manageSystem.admin.model.Org;
 import com.example.manageSystem.admin.model.User;
+import com.example.manageSystem.admin.module.dict.dao.DictDao;
 import com.example.manageSystem.admin.module.org.dao.OrgDao;
 import com.example.manageSystem.admin.module.user.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -19,6 +20,8 @@ public class OrgService {
     OrgDao orgDao;
     @Autowired
     UserDao userDao;
+    @Autowired
+    DictDao dictDao;
 
     //生成组织树形结构
     public List<Org> getOrgTree(){
@@ -68,6 +71,13 @@ public class OrgService {
     public Map<String, Object> getOrgAndUsersByOrgId(Integer orgId) {
         Map<String,Object> map = new HashMap<String, Object>();
         Org org = this.findById(orgId);
+        String industryCategory = org.getIndustryCategory();
+        List<Dict> industryCategorys = dictDao.getDictsByParentCode("industryCategory");
+        for (Dict category : industryCategorys) {
+            if(industryCategory.equals(category.getCode())){
+                org.setIndustryCategory(category.getName());
+            }
+        }
         List<User> users = userDao.getUsersByOrgId(orgId,null);
         map.put("org",org);
         map.put("users",users);
@@ -132,5 +142,13 @@ public class OrgService {
         String dateStr = format.format(new Date());
         String strCode = "SJ"+dateStr+(int)((Math.random()*9+1)*10000);
         return strCode;
+    }
+
+    //查询子组织机构
+    public List<Org> getOrgsByParentId(Integer orgId) {
+        Example example = new Example(Org.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("parentId",orgId);
+        return orgDao.selectByExample(example);
     }
 }

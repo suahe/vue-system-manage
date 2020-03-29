@@ -98,7 +98,7 @@
 </template>
 <script>
     import TableTreeColumn from '@/components/common/tableTree/tableTreeColumn.vue'
-    import {getMenuList,getMenuById,editMenu,addMenu} from  '@/api/system'
+    import {getMenuList,getMenuById,editMenu,addMenu} from  '@/api/userManage'
     export default {
         components: {
             TableTreeColumn,

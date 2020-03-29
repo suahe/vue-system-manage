@@ -35,6 +35,7 @@ public class OrgController {
         return Result.ok("查询成功",map);
     }
 
+
     @PostMapping("/addOrg")
     public Result addOrg(@RequestBody Org org){
         if(orgService.addOrg(org)){
@@ -49,7 +50,7 @@ public class OrgController {
         if(orgService.editOrg(org)){
             return Result.ok("添加成功");
         }else {
-            return Result.error(StatusCode.EIDTERROR,"添加失败");
+            return Result.error(StatusCode.EDITERROR,"添加失败");
         }
     }
 
@@ -59,6 +60,11 @@ public class OrgController {
         List<User> users = orgService.getUsersByOrgId(orgId);
         if(users!=null&&users.size()>0){
             return Result.error(StatusCode.DELETEERROR,"该机构存在用户，请先将该机构用户删除");
+        }
+        //判断该机构是否存在下级
+        List<Org> orgs = orgService.getOrgsByParentId(orgId);
+        if(orgs!=null&&orgs.size()>0){
+            return Result.error(StatusCode.DELETEERROR,"该机构存在子机构，请先将该机构子机构删除");
         }
         if(orgService.del(orgId)){
             return Result.ok("删除成功");

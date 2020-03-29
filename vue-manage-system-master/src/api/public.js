@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Loading } from 'element-ui';//引入加载层
 
 axios.defaults.withCredentials = true //跨域
 axios.defaults.timeout = 10000
@@ -21,9 +22,15 @@ export default {
   //get请求
   requestGet (url, params = {}) {
     return new Promise((resolve, reject) => {
+      const loading = Loading.service({  lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)' });
       axios.get(url, params).then(res => {
+        loading.close();
         resolve(res.data)
       }).catch(error => {
+        loading.close();
         reject(error)
       })
     })
@@ -31,9 +38,15 @@ export default {
   //get请求不带参数
   requestQuickGet (url) {
     return new Promise((resolve, reject) => {
+      const loading = Loading.service({  lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)' });
       axios.get(url).then(res => {
+        loading.close();
         resolve(res.data)
       }).catch(error => {
+        loading.close();
         reject(error)
       })
     })
@@ -41,9 +54,15 @@ export default {
   //post请求
   requestPost (url, params = {}) {
     return new Promise((resolve, reject) => {
+      const loading = Loading.service({  lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)' });
       axios.post(url, params).then(res => {
+        loading.close();
         resolve(res.data)
       }).catch(error => {
+        loading.close();
         reject(error)
       })
     })
@@ -51,13 +70,19 @@ export default {
   //post请求
   requestPostForm (url, params = {}) {
     return new Promise((resolve, reject) => {
+      const loading = Loading.service({  lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)' });
       axios.post(url, params, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       }).then(res => {
+        loading.close();
         resolve(res.data)//注意res是axios封装的对象，res.data才是服务端返回的信息
       }).catch(error => {
+        loading.close();
         reject(error)
       })
     })
@@ -65,9 +90,15 @@ export default {
   //put请求
   requestPut (url, params = {}) {
     return new Promise((resolve, reject) => {
+      const loading = Loading.service({  lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)' });
       axios.put(url, params).then(res => {
+        loading.close();
         resolve(res.data)
       }).catch(error => {
+        loading.close();
         reject(error)
       })
     })
@@ -75,9 +106,15 @@ export default {
   //delete请求
   requestDelete (url, params = {}) {
     return new Promise((resolve, reject) => {
+      const loading = Loading.service({  lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)' });
       axios.delete(url, params).then(res => {
+        loading.close();
         resolve(res.data)
       }).catch(error => {
+        loading.close();
         reject(error)
       })
     })

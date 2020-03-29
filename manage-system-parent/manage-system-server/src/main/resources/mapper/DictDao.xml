@@ -7,4 +7,55 @@
         sys_dict d1 LEFT JOIN sys_dict d2 ON d1.id = d2.parent_id
         WHERE d1.code = #{parentCode} ORDER BY d2.order_num
     </select>
+
+    <select id="getDictsByParentId" resultType="com.example.manageSystem.admin.model.Dict">
+        select * from sys_dict where
+        <if test="parentId == null">
+            parent_id is null
+        </if>
+        <if test="parentId != null">
+            parent_id = #{parentId}
+        </if>
+        order by order_num asc
+    </select>
+
+    <select id="findDictByParentAndCode" resultType="com.example.manageSystem.admin.model.Dict">
+        select * from sys_dict where code = #{code}
+        <if test="parentId == null">
+            and parent_id is null
+        </if>
+        <if test="parentId != null">
+            and parent_id = #{parentId}
+        </if>
+    </select>
+
+    <select id="findDictByParentIdAndCode" resultType="com.example.manageSystem.admin.model.Dict">
+        select * from sys_dict where code = #{code}
+        <if test="parentId == null">
+            and parent_id is null
+        </if>
+        <if test="parentId != null">
+            and parent_id = #{parentId}
+        </if>
+        and id != #{id}
+    </select>
+
+    <select id="findPage" resultType="com.example.manageSystem.admin.model.Dict">
+        select * from sys_dict where
+        <if test="parentId == null">
+             parent_id is null
+        </if>
+        <if test="parentId != null">
+            parent_id  = #{parentId}
+        </if>
+        <if test="code !=null and code != ''">
+            <bind name="patter1" value="'%'+code+'%'"/>
+            and code like #{patter1}
+        </if>
+        <if test="name !=null  and name != ''">
+            <bind name="patter2" value="'%'+name+'%'"/>
+            and name like #{patter2}
+        </if>
+        order by order_num
+    </select>
 </mapper>

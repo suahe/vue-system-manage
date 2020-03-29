@@ -1,5 +1,6 @@
 package com.example.manageSystem.admin.model;
 
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
@@ -8,14 +9,15 @@ public class Dict  implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
     private Integer id;//
     private Integer parentId;//上级ID
     private String name;//字典名称
     private String code;//字典码
     private String value;//字典值
-    private Integer order_num;//排序
+    private Integer orderNum;//排序
     private String remark;//备注
-    private Short del_flag;//删除标记 -1：已删除 0：正常
+    private Short delFlag;//删除标记 -1：已删除 0：正常
 
     public Integer getId() {
         return id;
@@ -57,13 +59,14 @@ public class Dict  implements Serializable {
         this.value = value;
     }
 
-    public Integer getOrder_num() {
-        return order_num;
+    public Integer getOrderNum() {
+        return orderNum;
     }
 
-    public void setOrder_num(Integer order_num) {
-        this.order_num = order_num;
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
     }
+
 
     public String getRemark() {
         return remark;
@@ -73,11 +76,12 @@ public class Dict  implements Serializable {
         this.remark = remark;
     }
 
-    public Short getDel_flag() {
-        return del_flag;
+    public Short getDelFlag() {
+        return delFlag;
     }
 
-    public void setDel_flag(Short del_flag) {
-        this.del_flag = del_flag;
+    public void setDelFlag(Short delFlag) {
+        this.delFlag = delFlag;
     }
+
 }

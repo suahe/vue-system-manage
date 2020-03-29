@@ -113,8 +113,13 @@ export default new Router({
                     meta: { title: '组织机构管理' }
                 },
                 {
+                    path: '/dict',
+                    component: () => import( '../components/page/system/Dict.vue'),
+                    meta: { title: '组织机构管理' }
+                },
+                {
                     path: '/config',
-                    component: () => import( '../components/page/SysConfig.vue'),
+                    component: () => import( '../components/page/system/Config.vue'),
                     meta: { title: '系统配置' }
                 },
                 {

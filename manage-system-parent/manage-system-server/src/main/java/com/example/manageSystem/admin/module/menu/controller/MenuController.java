@@ -61,7 +61,7 @@ public class MenuController {
         if(menuService.edit(menu)){
             return Result.ok("编辑成功");
         }else {
-            return Result.error(StatusCode.EIDTERROR,"编辑失败");
+            return Result.error(StatusCode.EDITERROR,"编辑失败");
         }
     }
 

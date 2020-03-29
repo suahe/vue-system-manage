@@ -3,12 +3,14 @@ package com.example.manageSystem.admin.module.user.controller;
 import com.example.common.entity.response.PageResult;
 import com.example.common.entity.response.Result;
 import com.example.common.entity.response.StatusCode;
+import com.example.manageSystem.admin.model.Role;
 import com.example.manageSystem.admin.model.User;
 import com.example.manageSystem.admin.module.user.service.UserService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/sys/user")
@@ -53,7 +55,7 @@ public class UserController {
         if(userService.editUser(user)){
             return Result.ok("编辑成功",user);
         }else{
-            return Result.error(StatusCode.EIDTERROR,"编辑成功");
+            return Result.error(StatusCode.EDITERROR,"编辑成功");
         }
     }
 

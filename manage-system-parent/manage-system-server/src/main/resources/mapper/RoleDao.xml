@@ -24,4 +24,10 @@
             #{item}
         </foreach>
     </select>
+
+    <select id="getRolesByOrgId" parameterType="integer" resultType="com.example.manageSystem.admin.model.Role">
+        SELECT r.* FROM sys_org o
+        LEFT JOIN sys_role r ON r.industry_category = o.industry_category
+        WHERE o.org_id = #{orgId}
+    </select>
 </mapper>

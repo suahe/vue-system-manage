@@ -1,5 +1,6 @@
 package com.example.manageSystem.admin.module.role.dao;
 
+import com.example.manageSystem.admin.model.Org;
 import com.example.manageSystem.admin.model.Role;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
@@ -17,4 +18,6 @@ public interface RoleDao extends Mapper<Role> {
     int delByUserId(Integer userId);
 
     List<Role> getByRoleNameList(@Param("roleNameList") List<String> roleNameList);
+
+    List<Role> getRolesByOrgId(Integer orgId);
 }

@@ -9,7 +9,7 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-input v-model="query.role_name" placeholder="角色名称" class="handle-input mr10"></el-input>
+                <el-input v-model="query.roleName" placeholder="角色名称" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" class="el-icon-lx-roundaddfill" @click="handleAdd()">新增</el-button>
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection()">批量删除</el-button>
@@ -23,7 +23,7 @@
                     @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="roleId" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="industryCategory" label="行业类型" align="center"></el-table-column>
+                <el-table-column prop="industryCategory" label="行业类型"  :formatter="getDictByValue" align="center"></el-table-column>
                 <el-table-column prop="roleName" label="角色名称" align="center"></el-table-column>
                 <el-table-column prop="remark" label="备注" align="center"></el-table-column>
                 <el-table-column prop="createTime" :formatter="formatDate" label="创建时间" align="center"></el-table-column>
@@ -121,7 +121,8 @@
 </template>
 
 <script>
-    import {getRoleList,addRole,getRoleById,editRole,delRole,delRoleByIds,getMenuTreeByRoleId,saveRolePerms,getDictsByParentCode} from '@/api/system'
+    import {getRoleList,addRole,getRoleById,editRole,delRole,delRoleByIds,
+        getMenuTreeByRoleId,saveRolePerms,getDictsByParentCode} from '@/api/userManage'
     export default {
         data:function(){
             var validaIndustryCategory = function(rule, value, callback) {
@@ -201,6 +202,20 @@
             this.getData();
         },
         methods: {
+            getDictByValue(row, column){
+                let results = row[column.property]; // 默认原真实值
+                let dictData = this.industryCategoryList;
+                if(dictData && dictData.length>0){
+                    for(let i=0;i<dictData.length;i++){
+                        let item = dictData[i];
+                        if(row[column.property] === item.value){
+                            results = item.name;
+                            break;
+                        }
+                    }
+                }
+                return results;
+            },
             formatDate (row, column){
                 //获取单元格数据
                 let data = row[column.property];
@@ -421,6 +436,7 @@
                     this.$message.error("请输入角色名称")
                     return false;
                 }
+                return true;
             }
         }
     };

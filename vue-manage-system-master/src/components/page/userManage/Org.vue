@@ -1,6 +1,13 @@
 <template>
     <div>
-        <el-container style="border: 1px solid #eee">
+        <div class="crumbs">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item>
+                    <i class="el-icon-lx-cascades"></i>组织机构管理
+                </el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <el-container class="container" style="border: 1px solid #eee">
             <!--树形结构-->
             <!--<el-tree style="width:20%;background-color: rgb(238, 241, 246)" 
                      :data="treeData"
@@ -12,7 +19,7 @@
 
             <div style="width:25%;">
                 <div>
-                    <el-input style="width:150px;"
+                    <el-input style="width:200px;"
                               placeholder="输入关键字进行过滤"
                               v-model="filterText">
                     </el-input>
@@ -57,7 +64,7 @@
                                     <el-input readonly v-model="veiwOrgForm.orgCode"></el-input>
                                 </el-form-item>
                                 <el-form-item  label="行业类型">
-                                    <el-input readonly v-model="veiwOrgForm.industryCategory"></el-input>
+                                    <el-input readonly  v-model="veiwOrgForm.industryCategory"></el-input>
                                 </el-form-item>
                                 <el-form-item label="所属区">
                                     <el-input readonly v-model="veiwOrgForm.county"></el-input>
@@ -74,140 +81,7 @@
                             </el-form>
                         </div>
 
-                        <!-- 新增弹出框 -->
-                        <el-dialog title="新增" :visible.sync="orgAddVisible" width="30%">
-                            <el-form :model="orgForm" :rules="orgRules" ref="ruleOrgForm" label-width="28%">
-                                <el-form-item label="上级机构">
-                                    <el-select  v-model="orgForm.parentId" placeholder="请选择上级机构" style="width: 100%" @click.native="getOrgList">
-                                        <el-option value="">请选择上级机构</el-option>
-                                        <el-option v-for="(item,index) in orgList" :key="index" :label="item.orgName" :value="item.orgId"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item prop="orgName" label="机构名称">
-                                    <el-input v-model="orgForm.orgName"></el-input>
-                                </el-form-item>
-                                <el-form-item prop="orgName" label="行业类型">
-                                    <!--@click.native="queryIndustryCategoryList('industryCategory')"-->
-                                    <el-select  v-model="orgForm.industryCategory" placeholder="请选择行业类型" style="width: 100%" >
-                                        <el-option v-for="(item,index) in industryCategoryList" :key="index" :label="item.name" :value="item.value"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item prop="county" label="所属区">
-                                    <!--@click.native="queryCountyList('county')"-->
-                                    <el-select v-model="orgForm.county" placeholder="请选择所属区" style="width: 100%" @change="queryStreetList">
-                                        <el-option v-for="(item,index) in countyList" :key="index" :label="item.name" :value="item.value"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="所属街道/镇">
-                                    <el-select v-model="orgForm.street" placeholder="请选择所属街道/镇" style="width: 100%" @change="queryNeighborhoodList">
-                                        <el-option v-for="(item,index) in streetList" :key="index" :label="item.name" :value="item.value"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="所属居委会/村">
-                                    <el-select v-model="orgForm.neighborhood" placeholder="请选择所属居委会/村" style="width: 100%"  >
-                                        <el-option v-for="(item,index) in neighborhoodList" :key="index" :label="item.name" :value="item.value"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="备注">
-                                    <el-input type="textarea" v-model="orgForm.remark"></el-input>
-                                </el-form-item>
-                            </el-form>
 
-                            <span slot="footer" class="dialog-footer">
-                                <el-button @click="orgAddVisible = false">取 消</el-button>
-                                <el-button type="primary" @click="addOrg">确 定</el-button>
-                            </span>
-                        </el-dialog>
-
-                        <!-- 编辑弹出框 -->
-                        <el-dialog title="编辑" :visible.sync="orgEditVisible" width="30%">
-                            <el-form :model="orgForm" :rules="orgRules" ref="ruleOrgForm" label-width="28%">
-                                <el-form-item label="上级机构">
-                                    <el-select  v-model="orgForm.parentId" placeholder="请选择上级机构" style="width: 100%" @click.native="getOrgList">
-                                        <el-option value="">请选择上级机构</el-option>
-                                        <el-option v-for="(item,index) in orgList" :key="index" :label="item.orgName" :value="item.orgId"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item prop="orgName" label="机构名称">
-                                    <el-input v-model="orgForm.orgName"></el-input>
-                                </el-form-item>
-                                <el-form-item prop="industryCategory" label="行业类型">
-                                    <!--@click.native="queryIndustryCategoryList('industryCategory')"-->
-                                    <el-select  v-model="orgForm.industryCategory" placeholder="请选择行业类型" style="width: 100%" >
-                                        <el-option v-for="(item,index) in industryCategoryList" :key="index" :label="item.name" :value="item.value"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item prop="county" label="所属区">
-                                    <!--@click.native="queryCountyList('county')"-->
-                                    <el-select v-model="orgForm.county" placeholder="请选择所属区" style="width: 100%"  @change="queryStreetList">
-                                        <el-option v-for="(item,index) in countyList" :key="index" :label="item.name" :value="item.value"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="所属街道/镇">
-                                    <el-select v-model="orgForm.street" placeholder="请选择所属街道/镇" style="width: 100%" @change="queryNeighborhoodList">
-                                        <el-option v-for="(item,index) in streetList" :key="index" :label="item.name" :value="item.value"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="所属居委会/村">
-                                    <el-select v-model="orgForm.neighborhood" placeholder="请选择所属居委会/村" style="width: 100%"  @change="">
-                                        <el-option v-for="(item,index) in neighborhoodList" :key="index" :label="item.name" :value="item.value"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="备注">
-                                    <el-input type="textarea" v-model="orgForm.remark"></el-input>
-                                </el-form-item>
-                            </el-form>
-
-                            <span slot="footer" class="dialog-footer">
-                                <el-button @click="orgEditVisible=false">取 消</el-button>
-                                <el-button type="primary" @click="editOrg">确 定</el-button>
-                            </span>
-                        </el-dialog>
-
-                        <!-- 新增弹出框 -->
-                        <el-dialog title="添加下级机构" :visible.sync="addChildrenOrgVisible" width="30%">
-                            <el-form :model="orgForm" :rules="orgRules" ref="ruleOrgForm" label-width="28%">
-                                <el-form-item label="上级机构">
-                                    <el-select disabled v-model="orgForm.parentId" placeholder="请选择上级机构" style="width: 100%" @click.native="getOrgList">
-                                        <el-option value="">请选择上级机构</el-option>
-                                        <el-option v-for="(item,index) in orgList" :key="index" :label="item.orgName" :value="item.orgId"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item prop="orgName" label="机构名称">
-                                    <el-input v-model="orgForm.orgName"></el-input>
-                                </el-form-item>
-                                <el-form-item prop="orgName" label="行业类型">
-                                    <!--@click.native="queryIndustryCategoryList('industryCategory')"-->
-                                    <el-select  v-model="orgForm.industryCategory" placeholder="请选择行业类型" style="width: 100%" >
-                                        <el-option v-for="(item,index) in industryCategoryList" :key="index" :label="item.name" :value="item.value"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item  prop="county" label="所属区">
-                                    <!--@click.native="queryCountyList('county')"-->
-                                    <el-select disabled v-model="orgForm.county" placeholder="请选择所属区" style="width: 100%" @change="queryStreetList">
-                                        <el-option v-for="(item,index) in countyList" :key="index" :label="item.name" :value="item.value"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="所属街道/镇">
-                                    <el-select v-model="orgForm.street" placeholder="请选择所属街道/镇" style="width: 100%" @change="queryNeighborhoodList">
-                                        <el-option v-for="(item,index) in streetList" :key="index" :label="item.name" :value="item.value"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="所属居委会/村">
-                                    <el-select v-model="orgForm.neighborhood" placeholder="请选择所属居委会/村" style="width: 100%"  >
-                                        <el-option v-for="(item,index) in neighborhoodList" :key="index" :label="item.name" :value="item.value"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="备注">
-                                    <el-input type="textarea" v-model="orgForm.remark"></el-input>
-                                </el-form-item>
-                            </el-form>
-
-                            <span slot="footer" class="dialog-footer">
-                                <el-button @click="addChildrenOrgVisible = false">取 消</el-button>
-                                <el-button type="primary" @click="addOrg">确 定</el-button>
-                            </span>
-                        </el-dialog>
                     </el-tab-pane>
                     <el-tab-pane label="用户列表" name="second">
                         <div class="handle-box">
@@ -256,91 +130,227 @@
                                     :total="pageTotal"
                                     @current-change="handlePageChange"></el-pagination>
                         </div>
+                    </el-tab-pane>
+                </el-tabs>
 
-                        <!-- 新增弹出框 -->
-                        <el-dialog title="新增" :visible.sync="addVisible" width="30%">
-                            <el-form :model="userForm" :rules="userRules" ref="userRulesForm" label-width="80px">
-                                <el-form-item prop="username" label="用户名称">
-                                    <el-input v-model="userForm.username"></el-input>
-                                </el-form-item>
-                                <el-form-item prop="name" label="真实姓名">
-                                    <el-input v-model="userForm.name"></el-input>
-                                </el-form-item>
-                                <el-form-item prop="password"  label="密码">
-                                   <el-input placeholder="请输入密码" v-model="userForm.password" show-password></el-input>
-                                </el-form-item>
-                                <!--<el-form-item prop="checkPassword" label="确认密码">
-                                    <el-input type="password" v-model="form.checkPassword" autocomplete="off"></el-input>
-                                </el-form-item>-->
-                                <el-form-item prop="sex" label="性别">
-                                    <el-radio v-model="radio" label="1">男</el-radio>
-                                    <el-radio v-model="radio" label="2">女</el-radio>
-                                </el-form-item>
-                                <!-- 使用<el-checkbox label="复选框 A"></el-checkbox>复选框不行-->
-                                <el-form-item label="角色">
-                                    <el-checkbox-group v-model="checkedRoles">
-                                        <el-checkbox v-for="role in roles" :label="role.roleName" :key="role.roleId">
-                                            {{role.roleName}}
-                                        </el-checkbox>
-                                    </el-checkbox-group>
-                                </el-form-item>
-                                <el-form-item prop="mobile" label="联系方式">
-                                    <el-input v-model="userForm.mobile"></el-input>
-                                </el-form-item>
-                                <el-form-item prop="email" label="邮箱">
-                                    <el-input v-model="userForm.email"></el-input>
-                                </el-form-item>
-                            </el-form>
+                <!-- 新增弹出框 -->
+                <el-dialog title="新增" :visible.sync="orgAddVisible" width="30%">
+                    <el-form :model="orgForm" :rules="orgRules" ref="ruleOrgForm" label-width="28%">
+                        <el-form-item label="上级机构">
+                            <el-select  v-model="orgForm.parentId" placeholder="请选择上级机构" style="width: 100%" @click.native="getOrgList">
+                                <el-option value="">请选择上级机构</el-option>
+                                <el-option v-for="(item,index) in orgList" :key="index" :label="item.orgName" :value="item.orgId"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item prop="orgName" label="机构名称">
+                            <el-input v-model="orgForm.orgName"></el-input>
+                        </el-form-item>
+                        <el-form-item prop="orgName" label="行业类型">
+                            <!--@click.native="queryIndustryCategoryList('industryCategory')"-->
+                            <el-select  v-model="orgForm.industryCategory" placeholder="请选择行业类型" style="width: 100%" >
+                                <el-option v-for="(item,index) in industryCategoryList" :key="index" :label="item.name" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item prop="county" label="所属区">
+                            <!--@click.native="queryCountyList('county')"-->
+                            <el-select v-model="orgForm.county" placeholder="请选择所属区" style="width: 100%">
+                                <el-option v-for="(item,index) in countyList" :key="index" :label="item.name" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="所属街道/镇">
+                            <el-select v-model="orgForm.street" placeholder="请选择所属街道/镇" style="width: 100%" @click.native="queryStreetList" @change="queryNeighborhoodList">
+                                <el-option v-for="(item,index) in streetList" :key="index" :label="item.name" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="所属居委会/村">
+                            <el-select v-model="orgForm.neighborhood" placeholder="请选择所属居委会/村" style="width: 100%"  >
+                                <el-option v-for="(item,index) in neighborhoodList" :key="index" :label="item.name" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="备注">
+                            <el-input type="textarea" v-model="orgForm.remark"></el-input>
+                        </el-form-item>
+                    </el-form>
 
-                            <span slot="footer" class="dialog-footer">
+                    <span slot="footer" class="dialog-footer">
+                                <el-button @click="orgAddVisible = false">取 消</el-button>
+                                <el-button type="primary" @click="addOrg">确 定</el-button>
+                            </span>
+                </el-dialog>
+                <!-- 组织机构弹窗-->
+                <!-- 编辑弹出框 -->
+                <el-dialog title="编辑" :visible.sync="orgEditVisible" width="30%">
+                    <el-form :model="orgForm" :rules="orgRules" ref="ruleOrgForm" label-width="28%">
+                        <el-form-item label="上级机构">
+                            <el-select  v-model="orgForm.parentId" placeholder="请选择上级机构" style="width: 100%" @click.native="getOrgList">
+                                <el-option value="">请选择上级机构</el-option>
+                                <el-option v-for="(item,index) in orgList" :key="index" :label="item.orgName" :value="item.orgId"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item prop="orgName" label="机构名称">
+                            <el-input v-model="orgForm.orgName"></el-input>
+                        </el-form-item>
+                        <el-form-item prop="industryCategory" label="行业类型">
+                            <!--@click.native="queryIndustryCategoryList('industryCategory')"-->
+                            <el-select  v-model="orgForm.industryCategory" placeholder="请选择行业类型" style="width: 100%" >
+                                <el-option v-for="(item,index) in industryCategoryList" :key="index" :label="item.name" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item prop="county" label="所属区">
+                            <!--@click.native="queryCountyList('county')"-->
+                            <el-select v-model="orgForm.county" placeholder="请选择所属区" style="width: 100%"  >
+                                <el-option v-for="(item,index) in countyList" :key="index" :label="item.name" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="所属街道/镇">
+                            <el-select v-model="orgForm.street" placeholder="请选择所属街道/镇" style="width: 100%" @click.native="queryStreetList" @change="queryNeighborhoodList">
+                                <el-option v-for="(item,index) in streetList" :key="index" :label="item.name" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="所属居委会/村">
+                            <el-select v-model="orgForm.neighborhood" placeholder="请选择所属居委会/村" style="width: 100%"  @change="">
+                                <el-option v-for="(item,index) in neighborhoodList" :key="index" :label="item.name" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="备注">
+                            <el-input type="textarea" v-model="orgForm.remark"></el-input>
+                        </el-form-item>
+                    </el-form>
+
+                    <span slot="footer" class="dialog-footer">
+                                <el-button @click="orgEditVisible=false">取 消</el-button>
+                                <el-button type="primary" @click="editOrg">确 定</el-button>
+                            </span>
+                </el-dialog>
+
+                <!-- 新增弹出框 -->
+                <el-dialog title="添加下级机构" :visible.sync="addChildrenOrgVisible" width="30%">
+                    <el-form :model="orgForm" :rules="orgRules" ref="ruleOrgForm" label-width="28%">
+                        <el-form-item label="上级机构">
+                            <el-select disabled v-model="orgForm.parentId" placeholder="请选择上级机构" style="width: 100%" @click.native="getOrgList">
+                                <el-option value="">请选择上级机构</el-option>
+                                <el-option v-for="(item,index) in orgList" :key="index" :label="item.orgName" :value="item.orgId"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item prop="orgName" label="机构名称">
+                            <el-input v-model="orgForm.orgName"></el-input>
+                        </el-form-item>
+                        <el-form-item prop="orgName" label="行业类型">
+                            <!--@click.native="queryIndustryCategoryList('industryCategory')"-->
+                            <el-select  v-model="orgForm.industryCategory" placeholder="请选择行业类型" style="width: 100%" >
+                                <el-option v-for="(item,index) in industryCategoryList" :key="index" :label="item.name" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item  prop="county" label="所属区">
+                            <!--@click.native="queryCountyList('county')"-->
+                            <el-select disabled v-model="orgForm.county" placeholder="请选择所属区" style="width: 100%">
+                                <el-option v-for="(item,index) in countyList" :key="index" :label="item.name" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="所属街道/镇">
+                            <el-select v-model="orgForm.street" placeholder="请选择所属街道/镇" style="width: 100%" @click.native="queryStreetList" @change="queryNeighborhoodList">
+                                <el-option v-for="(item,index) in streetList" :key="index" :label="item.name" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="所属居委会/村">
+                            <el-select v-model="orgForm.neighborhood" placeholder="请选择所属居委会/村" style="width: 100%"  >
+                                <el-option v-for="(item,index) in neighborhoodList" :key="index" :label="item.name" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="备注">
+                            <el-input type="textarea" v-model="orgForm.remark"></el-input>
+                        </el-form-item>
+                    </el-form>
+
+                    <span slot="footer" class="dialog-footer">
+                                <el-button @click="addChildrenOrgVisible = false">取 消</el-button>
+                                <el-button type="primary" @click="addChildrenOrgSave">确 定</el-button>
+                            </span>
+                </el-dialog>
+
+                <!-- 用户弹窗-->
+                <!-- 新增弹出框 -->
+                <el-dialog title="新增" :visible.sync="addVisible" width="30%">
+                    <el-form :model="userForm" :rules="userRules" ref="userRulesForm" label-width="80px">
+                        <el-form-item prop="username" label="用户名称">
+                            <el-input v-model="userForm.username"></el-input>
+                        </el-form-item>
+                        <el-form-item prop="name" label="真实姓名">
+                            <el-input v-model="userForm.name"></el-input>
+                        </el-form-item>
+                        <el-form-item prop="password"  label="密码">
+                            <el-input placeholder="请输入密码" v-model="userForm.password" show-password></el-input>
+                        </el-form-item>
+                        <!--<el-form-item prop="checkPassword" label="确认密码">
+                            <el-input type="password" v-model="form.checkPassword" autocomplete="off"></el-input>
+                        </el-form-item>-->
+                        <el-form-item prop="sex" label="性别">
+                            <el-radio v-model="radio" label="1">男</el-radio>
+                            <el-radio v-model="radio" label="2">女</el-radio>
+                        </el-form-item>
+                        <!-- 使用<el-checkbox label="复选框 A"></el-checkbox>复选框不行-->
+                        <el-form-item label="角色">
+                            <el-checkbox-group v-model="checkedRoles">
+                                <el-checkbox v-for="role in roles" :label="role.roleName" :key="role.roleId">
+                                    {{role.roleName}}
+                                </el-checkbox>
+                            </el-checkbox-group>
+                        </el-form-item>
+                        <el-form-item prop="mobile" label="联系方式">
+                            <el-input v-model="userForm.mobile"></el-input>
+                        </el-form-item>
+                        <el-form-item prop="email" label="邮箱">
+                            <el-input v-model="userForm.email"></el-input>
+                        </el-form-item>
+                    </el-form>
+
+                    <span slot="footer" class="dialog-footer">
                                 <el-button @click="addVisible = false">取 消</el-button>
                                 <el-button type="primary" @click="saveAdd">确 定</el-button>
                             </span>
-                        </el-dialog>
+                </el-dialog>
 
-                        <!-- 编辑弹出框 -->
-                        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-                            <el-form :model="userForm" :rules="userRules" ref="userRulesForm" label-width="80px">
-                                <el-form-item prop="username" label="用户名称">
-                                    <el-input v-model="userForm.username"></el-input>
-                                </el-form-item>
-                                <el-form-item prop="name" label="真实姓名">
-                                    <el-input v-model="userForm.name"></el-input>
-                                </el-form-item>
-                                <!--<el-form-item prop="password"  label="密码">
-                                    <el-input v-model="form.password" autocomplete="off"></el-input>
-                                </el-form-item>
-                                <el-form-item prop="checkPassword" label="确认密码">
-                                    <el-input type="password" v-model="form.checkPassword" autocomplete="off"></el-input>
-                                </el-form-item>-->
-                                <el-form-item prop="sex" label="性别">
-                                    <el-radio v-model="radio" label="1">男</el-radio>
-                                    <el-radio v-model="radio" label="2">女</el-radio>
-                                </el-form-item>
-                                <!-- 使用<el-checkbox label="复选框 A"></el-checkbox>复选框不行-->
-                                <el-form-item label="角色">
-                                    <el-checkbox-group v-model="checkedRoles">
-                                        <el-checkbox v-for="role in roles" :label="role.roleName" :key="role.roleId">
-                                            {{role.roleName}}
-                                        </el-checkbox>
-                                    </el-checkbox-group>
-                                </el-form-item>
-                                <el-form-item prop="mobile" label="联系方式">
-                                    <el-input v-model="userForm.mobile"></el-input>
-                                </el-form-item>
-                                <el-form-item prop="email" label="邮箱">
-                                    <el-input v-model="userForm.email"></el-input>
-                                </el-form-item>
-                            </el-form>
+                <!-- 编辑弹出框 -->
+                <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
+                    <el-form :model="userForm" :rules="userRules" ref="userRulesForm" label-width="80px">
+                        <el-form-item prop="username" label="用户名称">
+                            <el-input v-model="userForm.username"></el-input>
+                        </el-form-item>
+                        <el-form-item prop="name" label="真实姓名">
+                            <el-input v-model="userForm.name"></el-input>
+                        </el-form-item>
+                        <!--<el-form-item prop="password"  label="密码">
+                            <el-input v-model="form.password" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item prop="checkPassword" label="确认密码">
+                            <el-input type="password" v-model="form.checkPassword" autocomplete="off"></el-input>
+                        </el-form-item>-->
+                        <el-form-item prop="sex" label="性别">
+                            <el-radio v-model="radio" label="1">男</el-radio>
+                            <el-radio v-model="radio" label="2">女</el-radio>
+                        </el-form-item>
+                        <!-- 使用<el-checkbox label="复选框 A"></el-checkbox>复选框不行-->
+                        <el-form-item label="角色">
+                            <el-checkbox-group v-model="checkedRoles">
+                                <el-checkbox v-for="role in roles" :label="role.roleName" :key="role.roleId">
+                                    {{role.roleName}}
+                                </el-checkbox>
+                            </el-checkbox-group>
+                        </el-form-item>
+                        <el-form-item prop="mobile" label="联系方式">
+                            <el-input v-model="userForm.mobile"></el-input>
+                        </el-form-item>
+                        <el-form-item prop="email" label="邮箱">
+                            <el-input v-model="userForm.email"></el-input>
+                        </el-form-item>
+                    </el-form>
 
-                            <span slot="footer" class="dialog-footer">
+                    <span slot="footer" class="dialog-footer">
                                 <el-button @click="editVisible = false">取 消</el-button>
                                 <el-button type="primary" @click="saveEdit">确 定</el-button>
                             </span>
-                        </el-dialog>
+                </el-dialog>
 
-                    </el-tab-pane>
-                </el-tabs>
             </el-container>
         </el-container>
     </div>
@@ -348,10 +358,10 @@
 
 <script>
     import {
-        getOrgTree, getUsersByOrgId, getUserAndRolesById, getRolesByOrgIdAndUserId,
+        getOrgTree, getUsersByOrgId, getUserAndRolesById, getRolesByOrgId,
         getOrgAndUsersByOrgId, editUser, addUser, delUserByUserId,resetPassword,getDictsByParentCode,
         getOrgByOrgId,addOrg,editOrg,delOrg,getOrgList,delUserByIds
-    } from '@/api/system';
+    } from '@/api/userManage';
 
     export default {
 
@@ -555,11 +565,9 @@
                     this.$message.error('请选择组织机构');
                     return;
                 }
-                getRolesByOrgIdAndUserId(this.query.orgId).then(res => {
+                getRolesByOrgId(this.query.orgId).then(res => {
                     if (res.flag) {
-                        this.roles = res.data.roles;
-                        this.checkedRoles = res.data.checkedRoles;
-                        this.editVisible = false;
+                        this.roles = res.data;
                         this.addVisible = true;
                     } else {
                         this.$message.error(res.message);
@@ -625,17 +633,17 @@
                 }
                 /*this.$refs.userRulesForm.validate(valid => {
                     if (valid) {*/
-                        editUser(this.userForm).then(res => {
-                            if (res.flag) {
-                                this.$message.success(res.message);
-                                this.editVisible = false;
-                                this.gettableData();
-                            } else {
-                                this.$message.error(res.message);
-                                console.log(res.message);
-                                return false;
-                            }
-                        });
+                editUser(this.userForm).then(res => {
+                    if (res.flag) {
+                        this.$message.success(res.message);
+                        this.editVisible = false;
+                        this.gettableData();
+                    } else {
+                        this.$message.error(res.message);
+                        console.log(res.message);
+                        return false;
+                    }
+                });
                     /*} else {
                         this.$message.error('请填写表单信息');
                         return false;
@@ -710,12 +718,14 @@
             //街道
             queryStreetList(){
                 //当区被选择时，加载所选区的下级
+                this.streetList = [];
+                this.neighborhoodList = [];
                 var parentCode = '';
                 this.countyList.forEach((item)=>{
-                    if(item.name==this.orgForm.county){
+                    if(item.value==this.orgForm.county){
                         parentCode = item.code;
                     }
-                })
+                });
                 if(parentCode!=''){
                     getDictsByParentCode(parentCode).then(res=>{
                         if(res.flag){
@@ -728,13 +738,14 @@
             },
             //居委会/村
             queryNeighborhoodList(){
-                //当区被选择时，加载所选区的下级
+                //当街道或镇被选择时，加载所选街道或镇的下级
+                this.neighborhoodList = [];
                 var parentCode = '';
                 this.streetList.forEach((item)=>{
-                    if(item.name==this.orgForm.street){
+                    if(item.value==this.orgForm.street){
                         parentCode = item.code;
                     }
-                })
+                });
                 if(parentCode!=''){
                     getDictsByParentCode(parentCode).then(res=>{
                         if(res.flag){
@@ -746,6 +757,7 @@
                 }
             },
             handleOrgAdd(){
+                debugger
                 this.orgForm = {};
                 this.orgEditVisible = false;
                 this.orgAddVisible = true;
@@ -789,12 +801,27 @@
                     }
                 })
             },
+            addChildrenOrgSave(){
+                if(!this.validaOrgData()){
+                    return ;
+                }
+                addOrg(this.orgForm).then(res=>{
+                    if(res.flag){
+                        this.getTreeData();
+                        this.gettableData();
+                        this.addChildrenOrgVisible =false;
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                })
+            },
             delOrg(){
                 this.$confirm('确定要删除吗？', '提示', {
                     type: 'warning'
                 }).then(() => {
                     delOrg(this.query.orgId).then(res=>{
                         if(res.flag){
+                            this.veiwOrgForm = {};
                             this.getTreeData();
                             this.gettableData();
                         }else{
@@ -816,18 +843,15 @@
             addChildrenOrg(){
                 this.orgForm={};
                 this.orgForm.parentId = this.query.orgId;
-                if(!this.validaOrgData()){
+                /*if(!this.validaOrgData()){
                   return ;
-                }
+                }*/
                 getOrgByOrgId(this.query.orgId).then(res=>{
                     this.orgForm.county = res.data.county;
                     this.queryCountyList('county')
-                    console.log("所属区:"+this.orgForm.county);
-                    console.log("区列表："+this.industryCategoryList)
+                    this.addChildrenOrgVisible = true;
                 });
-                this.orgEditVisible = false;
-                this.orgAddVisible = false;
-                this.addChildrenOrgVisible = true;
+
             },
             //多选操作
             handleSelectionChange(val) {
@@ -869,10 +893,11 @@
                     this.$message.error("请选择行业类型");
                     return false;
                 }
-                if(!this.orgForm.counry){
+                if(!this.orgForm.county){
                     this.$message.error("请选择所属区");
                     return false;
                 }
+                return true;
             }
         }
     };

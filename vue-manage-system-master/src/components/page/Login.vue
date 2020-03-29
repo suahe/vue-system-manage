@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import * as sysApi from '../../api/system.js'
+import * as sysApi from '../../api/userManage.js'
 export default {
     data: function() {
         return {

@@ -24,8 +24,8 @@ public class Org implements Serializable {
     private  String county ;//所属区
     private  String street;//所属街道/镇
     private  String neighborhood;//所属居委会/村
-    @Transient
     private  Integer itemId ;//项目id
+    private  String remark;//备注
     @Transient
     private List<Org> children = new ArrayList<Org>();
 
@@ -115,6 +115,14 @@ public class Org implements Serializable {
 
     public void setItemId(Integer itemId) {
         this.itemId = itemId;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public List<Org> getChildren() {

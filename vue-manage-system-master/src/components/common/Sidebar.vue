@@ -166,8 +166,18 @@ export default {
                 },
                 {
                     icon: 'el-icon-lx-global',
-                    index: 'config',
-                    title: '系统配置'
+                    index: '9',
+                    title: '系统配置',
+                    subs: [
+                        {
+                            index: 'dict',
+                            title: '数据字典管理'
+                        },
+                        {
+                            index: 'config',
+                            title: '系统配置管理'
+                        },
+                    ]
                 },
                 {
                     icon: 'el-icon-lx-redpacket_fill',

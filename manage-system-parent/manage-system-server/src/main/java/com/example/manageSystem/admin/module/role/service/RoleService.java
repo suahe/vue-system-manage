@@ -1,6 +1,7 @@
 package com.example.manageSystem.admin.module.role.service;
 
 import com.example.manageSystem.admin.model.Menu;
+import com.example.manageSystem.admin.model.Org;
 import com.example.manageSystem.admin.model.Role;
 import com.example.manageSystem.admin.module.menu.dao.MenuDao;
 import com.example.manageSystem.admin.module.role.dao.RoleDao;
@@ -58,7 +59,7 @@ public class RoleService {
         Example example = new Example(Role.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(roleName)){
-            criteria.andEqualTo("role_name",roleName);
+            criteria.andEqualTo("roleName",roleName);
         }
         List<Role> roles = roleDao.selectByExample(example);
         PageInfo<Role> pageInfo = new PageInfo<Role>(roles);
@@ -131,7 +132,7 @@ public class RoleService {
     //根据用户id和组织id查询角色列表和已经分配给用户的角色名称列表
     public Map<String,Object> getRolesByOrgIdAndUserId(Integer orgId,Integer userId) {
         Map<String, Object> map = new HashMap<String, Object>();
-        List<Role> roles = this.findAll();
+        List<Role> roles = this.getRolesByOrgId(orgId);
         List<Role> checkedRoleList = roleDao.findByUserId(userId);
         List<String> checkedRoles = new ArrayList<String>();
         for (Role role : checkedRoleList) {
@@ -152,5 +153,9 @@ public class RoleService {
         }
         List<Role> roles = roleDao.getByRoleNameList(roleNameList);
         return roles;
+    }
+
+    public List<Role> getRolesByOrgId(Integer orgId) {
+        return roleDao.getRolesByOrgId(orgId);
     }
 }
