@@ -4,6 +4,7 @@ import com.example.common.entity.response.PageResult;
 import com.example.common.entity.response.Result;
 import com.example.common.entity.response.StatusCode;
 import com.example.manageSystem.admin.model.Dict;
+import com.example.manageSystem.admin.model.LogAnnotation;
 import com.example.manageSystem.admin.module.dict.service.DictService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,14 @@ import java.util.List;
 
 @RequestMapping("/sys/dict")
 @RestController
+@LogAnnotation(name="DictController")
 public class DictController {
 
     @Autowired
     private DictService dictService;
 
     @GetMapping("/findPage")
+    @LogAnnotation(name="findPage")
     public PageResult<Dict> findPage(@RequestParam(value ="parentId" ,required = false) Integer parentId ,
                            @RequestParam(value = "name" ,required = false) String name ,
                            @RequestParam(value ="code" ,required = false) String code ,
@@ -29,30 +32,35 @@ public class DictController {
     }
 
     @RequestMapping("/getDictsByParentCode")
+    @LogAnnotation(name="getDictsByParentCode")
     public Result getDictsByParentCode(String parentCode){
         List<Dict> dicts = dictService.getDictsByParentCode(parentCode);
         return Result.ok("查询成功",dicts);
     }
 
     @GetMapping("/getDicts")
+    @LogAnnotation(name="getDicts")
     public Result getDicts(){
         List<Dict> dicts = dictService.getDicts();
         return Result.ok("查询成功",dicts);
     }
 
     @GetMapping("/getDictsByParentId")
+    @LogAnnotation(name="getDictsByParentId")
     public Result getDictsByParentId(Integer parentId){
         List<Dict> dicts = dictService.getDictsByParentId(parentId);
         return Result.ok("查询成功",dicts);
     }
 
     @GetMapping("/findById")
+    @LogAnnotation(name="findById")
     public Result findById(Integer id){
         Dict dict = dictService.findById(id);
         return Result.ok("查询成功",dict);
     }
 
     @PostMapping("/add")
+    @LogAnnotation(name="add")
     public Result add(@RequestBody Dict dict){
         if(dictService.add(dict)){
             return Result.ok("新增成功");
@@ -62,6 +70,7 @@ public class DictController {
     }
 
     @PostMapping("/edit")
+    @LogAnnotation(name="edit")
     public Result edit(@RequestBody Dict dict){
         if(dictService.edit(dict)){
             return Result.ok("编辑成功");
@@ -71,6 +80,7 @@ public class DictController {
     }
 
     @GetMapping("/del")
+    @LogAnnotation(name="del")
     public Result del(Integer id){
         if(dictService.del(id)){
             return Result.ok("删除成功");
@@ -80,6 +90,7 @@ public class DictController {
     }
 
     @GetMapping("/delDictsByIds")
+    @LogAnnotation(name="delDictsByIds")
     public Result delDictsByIds(Integer[] ids){
         if(dictService.delDictsByIds(ids)){
             return Result.ok("删除成功");

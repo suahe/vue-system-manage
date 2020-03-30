@@ -3,6 +3,7 @@ package com.example.manageSystem.admin.module.login.controller;
 import com.example.common.entity.response.Result;
 import com.example.common.entity.response.StatusCode;
 import com.example.common.utils.MD5Utils;
+import com.example.manageSystem.admin.model.LogAnnotation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -16,11 +17,13 @@ import org.springframework.web.bind.annotation.*;
  * 登陆控制器
  */
 @RestController
+@LogAnnotation(name="LoginController")
 public class LoginController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @PostMapping("/login")
+    @LogAnnotation(name="login")
     public Result login(
             @RequestParam(value = "username", required = true) String userName,
             @RequestParam(value = "password", required = true) String password,
@@ -41,8 +44,8 @@ public class LoginController {
         return Result.ok("登陆成功");
     }
 
-   /* @RequestMapping("/")
+    @RequestMapping("/")
     public String index() {
         return "no permission";
-    }*/
+    }
 }

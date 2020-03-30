@@ -8,6 +8,7 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/manage_system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     username: root
     password: root
+
 # tk.mybatis mapper配置
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -15,5 +16,13 @@ mybatis:
     map-underscore-to-camel-case: true
   type-aliases-package: com.example.manageSystem.admin.model
 
-logging:
-    config: classpath:log4j2.xml
+# log4j2日志配置 如果文件名为lof4j2-spring.xml不需要配置
+#logging:
+#    config: classpath:log4j2.xml
+
+#线程池配置
+threadpool:
+  core-pool-size: 10
+  max-pool-size: 20
+  queue-capacity: 1000
+  keep-alive-seconds: 300

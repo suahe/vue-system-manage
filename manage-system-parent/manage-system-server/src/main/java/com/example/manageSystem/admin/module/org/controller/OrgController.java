@@ -2,6 +2,7 @@ package com.example.manageSystem.admin.module.org.controller;
 
 import com.example.common.entity.response.Result;
 import com.example.common.entity.response.StatusCode;
+import com.example.manageSystem.admin.model.LogAnnotation;
 import com.example.manageSystem.admin.model.Org;
 import com.example.manageSystem.admin.model.User;
 import com.example.manageSystem.admin.module.org.service.OrgService;
@@ -12,24 +13,28 @@ import java.util.Map;
 
 @RequestMapping("/sys/org")
 @RestController
+@LogAnnotation(name="OrgController")
 public class OrgController {
 
     @Autowired
     OrgService orgService;
 
     @GetMapping("/getOrgTree")
+    @LogAnnotation(name="getOrgTree")
     public Result getOrgTree(){
         List<Org> orgTree = orgService.getOrgTree();
         return Result.ok("查询成功",orgTree);
     }
 
     @GetMapping("/findById")
+    @LogAnnotation(name="findById")
     public Result findById(Integer orgId){
         Org org = orgService.findById(orgId);
         return Result.ok("查询成功",org);
     }
 
     @GetMapping("/getOrgAndUsersByOrgId")
+    @LogAnnotation(name="getOrgAndUsersByOrgId")
     public Result getOrgAndUsersByOrgId(Integer orgId){
         Map<String,Object> map = orgService.getOrgAndUsersByOrgId(orgId);
         return Result.ok("查询成功",map);
@@ -37,6 +42,7 @@ public class OrgController {
 
 
     @PostMapping("/addOrg")
+    @LogAnnotation(name="addOrg")
     public Result addOrg(@RequestBody Org org){
         if(orgService.addOrg(org)){
             return Result.ok("添加成功");
@@ -46,6 +52,7 @@ public class OrgController {
     }
 
     @PostMapping("/editOrg")
+    @LogAnnotation(name="editOrg")
     public Result editOrg(@RequestBody Org org){
         if(orgService.editOrg(org)){
             return Result.ok("添加成功");
@@ -55,6 +62,7 @@ public class OrgController {
     }
 
     @GetMapping("/del")
+    @LogAnnotation(name="del")
     public Result del(Integer orgId){
         //判断该机构是否存在用户
         List<User> users = orgService.getUsersByOrgId(orgId);
@@ -74,6 +82,7 @@ public class OrgController {
     }
 
     @GetMapping("/getOrgList")
+    @LogAnnotation(name="getOrgList")
     public Result getOrgList(){
         List<Org> orgs = orgService.getOrgList();
         return Result.ok("查询成功",orgs);

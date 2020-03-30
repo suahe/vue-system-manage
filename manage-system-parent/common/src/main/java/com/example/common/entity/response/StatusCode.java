@@ -18,5 +18,7 @@ public class StatusCode {
     public static final int PARAMSERROR = 20010;//参数错误
     public static final int ADDPERMSERROR = 20011;//添加权限失败
     public static final int RESETERROR  = 20012;//重置失败
+    public static final int LOGININVALID = 20013;//登录过期
+    public static final int NOPERMISSION = 20014;//没有权限
 
 }

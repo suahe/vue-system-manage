@@ -2,6 +2,7 @@ package com.example.manageSystem.admin.module.menu.controller;
 
 import com.example.common.entity.response.Result;
 import com.example.common.entity.response.StatusCode;
+import com.example.manageSystem.admin.model.LogAnnotation;
 import com.example.manageSystem.admin.model.Menu;
 import com.example.manageSystem.admin.module.menu.service.MenuService;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/sys/menu")
+@LogAnnotation(name="MenuController")
 public class MenuController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -20,6 +22,7 @@ public class MenuController {
     MenuService menuService;
 
     @GetMapping("/getMenuTreeByRoleId")
+    @LogAnnotation(name="getMenuTreeByRoleId")
     public Result getMenuTreeByRoleId(Integer roleId){
         if (roleId==null){
             return Result.error(StatusCode.PARAMSERROR,"角色ID为空");
@@ -29,12 +32,14 @@ public class MenuController {
     }
 
     @GetMapping("/findAll")
+    @LogAnnotation(name="findAll")
     public Result findAll(){
         List<Menu> menus = menuService.findAll();
         return Result.ok("查询成功",menus);
     }
 
     @GetMapping("findById")
+    @LogAnnotation(name="findById")
     public Result findById(Integer id){
         Menu menu = menuService.findById(id);
         if(menu!=null&&menu.getId()!=null){
@@ -45,6 +50,7 @@ public class MenuController {
     }
 
     @PostMapping("/add")
+    @LogAnnotation(name="add")
     public Result add(@RequestBody Menu menu){
         if(menuService.add(menu)){
             return Result.ok("新增成功");
@@ -54,6 +60,7 @@ public class MenuController {
     }
 
     @PostMapping("/edit")
+    @LogAnnotation(name="edit")
     public Result edit(@RequestBody Menu menu){
         if (menu.getId()==menu.getParentId()){
             return  Result.error(StatusCode.PARAMSERROR,"上级资源不能为本身");

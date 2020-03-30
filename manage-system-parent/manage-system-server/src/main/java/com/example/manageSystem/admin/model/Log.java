@@ -11,8 +11,9 @@ public class Log implements Serializable {
 
     @Id
     private Integer id ;
-    private String title;//标题
-    private String requestUrl ;// NULL请求url
+    private String requestHeaders;//请求头
+    private String requestUrl ;//请求url
+    private String moduleName;//模块名称
     private String method ;//请求方法
     private String params ;//请求参数
     private Short type ;//日志类型（1：接入日志；2：错误日志）
@@ -33,12 +34,20 @@ public class Log implements Serializable {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getModuleName() {
+        return moduleName;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
+    }
+
+    public String getRequestHeaders() {
+        return requestHeaders;
+    }
+
+    public void setRequestHeaders(String requestHeaders) {
+        this.requestHeaders = requestHeaders;
     }
 
     public String getRequestUrl() {

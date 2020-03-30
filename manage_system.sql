@@ -105,10 +105,11 @@ CREATE TABLE `sys_org` (
 DROP TABLE IF EXISTS `sys_log`;
 CREATE TABLE `sys_log` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `title` varchar(500) DEFAULT NULL COMMENT '标题',
+  `request_headers` varchar(5000) DEFAULT NULL COMMENT '请求头',
   `request_url` varchar(255) DEFAULT NULL COMMENT '请求url',
+  `module_name` varchar(500) DEFAULT NULL COMMENT '标题',
   `method` varchar(200) DEFAULT NULL COMMENT '请求方法',
-  `params` varchar(5000) DEFAULT NULL COMMENT '请求参数',
+  `params` varchar(1000) DEFAULT NULL COMMENT '请求参数',
   `type` bigint(4) DEFAULT NULL COMMENT '日志类型（1：接入日志；2：错误日志）',
   `exception` varchar(5000) DEFAULT NULL COMMENT '异常信息',
   `user_agent` varchar(5000) DEFAULT NULL COMMENT '操作用户代理信息',
@@ -119,7 +120,7 @@ CREATE TABLE `sys_log` (
   `creator` varchar(50) DEFAULT NULL COMMENT '操作人',
   `create_date` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统日志'
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COMMENT='系统日志'
 
 
 -- 数据字典表
