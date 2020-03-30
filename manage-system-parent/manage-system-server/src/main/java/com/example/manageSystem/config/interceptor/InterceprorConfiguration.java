@@ -27,7 +27,7 @@ public class InterceprorConfiguration extends WebMvcConfigurerAdapter {
         //InterceptorRegistration ir = registry.addInterceptor(new LogInterceptor());
         //配置拦截的路径
         ir.addPathPatterns("/**");
-        ir.excludePathPatterns("/login");
+        //ir.excludePathPatterns("/login");
     }
 
 }

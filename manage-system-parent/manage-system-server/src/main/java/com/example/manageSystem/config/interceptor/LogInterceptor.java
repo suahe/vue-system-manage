@@ -37,14 +37,6 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
-
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        if(null==user) {//未登录
-            //直接重定向到登录页面
-            response.sendRedirect("http://localhost:8080/login#/login");
-            return false;
-        }
         /*if (logger.isDebugEnabled()){*/
              long beginTime = System.currentTimeMillis();//1、开始时间
             startTimeThreadLocal.set(beginTime);//线程绑定变量（该数据只有当前请求的线程可见）
