@@ -252,12 +252,13 @@
                 }).then(() => {
                         delRole(row.roleId).then(res=>{
                             if(res.flag){
-                                this.$message.success(res.message);
+                                this.$message.success("删除成功");
+                                this.getData();
                             }else {
                                 this.$message.error(res.message);
                             }
                         });
-                        this.getData();
+
                     }).catch(() => {});
             },
             //多选操作

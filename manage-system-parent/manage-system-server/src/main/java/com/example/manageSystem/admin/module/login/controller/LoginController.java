@@ -41,11 +41,7 @@ public class LoginController {
             e.printStackTrace();
             return  Result.error(StatusCode.LOGINERROR,"您的账号或密码输入错误");
         }
-        return Result.ok("登陆成功");
+        return Result.ok("登陆成功",userName);
     }
 
-    @RequestMapping("/")
-    public String index() {
-        return "no permission";
-    }
 }

@@ -4,6 +4,7 @@ import com.example.manageSystem.admin.model.Menu;
 import com.example.manageSystem.admin.module.menu.dao.MenuDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,11 +95,13 @@ public class MenuService {
         return menu;
     }
 
+    @Transactional
     public boolean add(Menu menu) {
         int i = menuDao.insert(menu);
         return i>0;
     }
 
+    @Transactional
     public boolean edit(Menu menu) {
         int i = 0;
         Menu DbMenu = findById(menu.getId());
@@ -109,4 +112,23 @@ public class MenuService {
     }
 
 
+    @Transactional
+    public boolean del(Integer id) {
+        List<Menu> menus = this.findChildrenMenu(id);
+        if (menus!=null||menus.size()>0){
+            throw new RuntimeException("该菜单存在子菜单，请先删除子菜单");
+        }
+        int i = menuDao.deleteByPrimaryKey(id);
+        int y = menuDao.delRoleAndMenuByMenuId(id);
+        return i+y>0;
+    }
+
+    //查询子菜单
+    public List<Menu> findChildrenMenu(Integer parentId){
+        Example example = new Example(Menu.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("parentId",parentId);
+        List<Menu> menus = menuDao.selectByExample(example);
+        return menus;
+    }
 }

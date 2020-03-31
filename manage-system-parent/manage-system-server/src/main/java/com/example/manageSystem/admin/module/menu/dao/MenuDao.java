@@ -7,4 +7,6 @@ import java.util.List;
 public interface MenuDao extends Mapper<Menu> {
 
     List<Menu> findByRoleId(Integer roleId);
+
+    int delRoleAndMenuByMenuId(Integer id);
 }

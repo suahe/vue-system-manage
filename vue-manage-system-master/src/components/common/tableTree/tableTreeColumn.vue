@@ -35,9 +35,11 @@
         },
         methods: {
             childStyles(row) {
-                return {
+                debugger
+                var  row ={
                     'padding-left': (row.level > 1 ? row.level * 7 : 0) + 'px'
                 };
+                return row;
             },
             iconClasses(row) {
                 return [!row._expanded ? 'el-icon-caret-right' : 'el-icon-caret-bottom']

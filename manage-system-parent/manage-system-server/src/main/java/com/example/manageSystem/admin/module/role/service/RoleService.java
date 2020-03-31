@@ -156,6 +156,8 @@ public class RoleService {
     }
 
     public List<Role> getRolesByOrgId(Integer orgId) {
-        return roleDao.getRolesByOrgId(orgId);
+        List<Role> roles = new ArrayList<>();
+        roles = roleDao.getRolesByOrgId(orgId);
+        return roles;
     }
 }

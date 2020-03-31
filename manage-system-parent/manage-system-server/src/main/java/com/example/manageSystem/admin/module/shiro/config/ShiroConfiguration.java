@@ -1,5 +1,6 @@
 package com.example.manageSystem.admin.module.shiro.config;
 
+import lombok.AllArgsConstructor;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -96,15 +97,13 @@ public class ShiroConfiguration {
         shiroFilterFactoryBean.setFilters(filters);
 
         Map<String, String> filterChainDefinitionManager = new LinkedHashMap<String, String>();
-        filterChainDefinitionManager.put("/logout", "logout");
-        filterChainDefinitionManager.put("/user/**", "authc,roles[ROLE_USER]");//用户为ROLE_USER 角色可以访问。由用户角色控制用户行为。
-        filterChainDefinitionManager.put("/events/**", "authc,roles[ROLE_ADMIN]");
-        //        filterChainDefinitionManager.put("/user/edit/**", "authc,perms[user:edit]");// 这里为了测试，固定写死的值，也可以从数据库或其他配置中读取，此处是用权限控制
-
-        filterChainDefinitionManager.put("/**", "anon");
+        filterChainDefinitionManager.put("/login","anon");
+        filterChainDefinitionManager.put("/logout", "anon");
+        filterChainDefinitionManager.put("/imserver/*", "anon");//添加webSocket不需要拦截
+//        filterChainDefinitionManager.put("/*", "authc");//表示需要认证才可以访问
+//        filterChainDefinitionManager.put("/**", "authc");//表示需要认证才可以访问
+//        filterChainDefinitionManager.put("/*.*", "authc");//表示需要认证才可以访问
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionManager);
-
-
         shiroFilterFactoryBean.setSuccessUrl("/");
         shiroFilterFactoryBean.setUnauthorizedUrl("/403");
         return shiroFilterFactoryBean;
@@ -135,14 +134,7 @@ public class ShiroConfiguration {
     @Bean(name = "sessionManager")
     public DefaultWebSessionManager sessionManager() {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-        // 设置session过期时间3600s
-        sessionManager.setGlobalSessionTimeout(1000);
         return sessionManager;
     }
 
-    @Bean
-    public LoginAuthorizationFilter loginFilter(){
-        LoginAuthorizationFilter loginFilter=new LoginAuthorizationFilter();
-        return loginFilter;
-    }
 }

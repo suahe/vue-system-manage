@@ -1,5 +1,5 @@
 var sysConfig = {
-    apiUrl: 'http://127.0.0.1:9011/',
+    apiUrl: 'http://127.0.0.1:9011',
     imgUrl:'',
     videoUrl:'',
     openAuthenticate:true,

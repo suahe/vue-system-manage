@@ -9,4 +9,7 @@
     </select>
 
 
+    <delete id="delRoleAndMenuByMenuId" parameterType="integer">
+        delete from sys_role_menu where menu_id = #{id}
+    </delete>
 </mapper>

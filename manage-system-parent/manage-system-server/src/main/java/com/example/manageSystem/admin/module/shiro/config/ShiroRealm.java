@@ -87,7 +87,7 @@ public class ShiroRealm extends AuthorizingRealm {
             //设置用户session
             Session session = SecurityUtils.getSubject().getSession();
             session.setAttribute("user", user);
-            //SecurityUtils.getSubject().getSession().setTimeout(1000L);
+            SecurityUtils.getSubject().getSession().setTimeout(50000L);//设置过期时间
             //把shiro的session中放session中 key=userId value=principals
             return new SimpleAuthenticationInfo(userName,user.getPassword(),getName());
         } else {

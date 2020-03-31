@@ -9,7 +9,7 @@
         </div>
         <el-container class="container" style="border: 1px solid #eee">
             <!--树形结构-->
-            <!--<el-tree style="width:20%;background-color: rgb(238, 241, 246)" 
+            <!--<el-tree style="width:20%;background-color: rgb(238, 241, 246)"
                      :data="treeData"
                      :props="defaultProps"
                      default-expand-all
@@ -567,7 +567,9 @@
                 }
                 getRolesByOrgId(this.query.orgId).then(res => {
                     if (res.flag) {
-                        this.roles = res.data;
+                        if(res.data){
+                            this.roles = res.data;
+                        }
                         this.addVisible = true;
                     } else {
                         this.$message.error(res.message);
@@ -584,7 +586,6 @@
                         this.radio = res.data.user.sex + '';
                         this.roles = res.data.roles;
                         this.checkedRoles = res.data.checkedRoles;
-                        this.addVisible = false;
                         this.editVisible = true;
                     } else {
                         this.$message.error(res.message);
@@ -757,7 +758,6 @@
                 }
             },
             handleOrgAdd(){
-                debugger
                 this.orgForm = {};
                 this.orgEditVisible = false;
                 this.orgAddVisible = true;

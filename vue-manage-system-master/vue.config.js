@@ -2,15 +2,19 @@ module.exports = {
     baseUrl: './',
     assetsDir: 'static',
     productionSourceMap: false,
-    // devServer: {
-    //     proxy: {
-    //         '/api':{
-    //             target:'http://jsonplaceholder.typicode.com',
-    //             changeOrigin:true,
-    //             pathRewrite:{
-    //                 '/api':''
-    //             }
-    //         }
-    //     }
-    // }
-}
+    devServer: {
+        port: 8085,
+        https: false,
+        hotOnly: false,
+        disableHostCheck: true,
+        proxy: {
+             '/api':{
+                 target:'http://127.0.0.1:9011',
+                 changeOrigin:true,
+                 pathRewrite:{
+                     '/api':''
+                 }
+             }
+        }
+    }
+};

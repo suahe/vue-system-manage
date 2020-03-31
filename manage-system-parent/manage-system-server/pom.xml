@@ -54,6 +54,7 @@
 			<artifactId>common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+
 		<!-- shiro 依赖  begin -->
 		<dependency>
 			<groupId>org.apache.shiro</groupId>
@@ -87,10 +88,19 @@
 		</dependency>
 		<!--日志记录需要回去request中请求信息 end-->
 
+		<!--aop依赖 begin -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
+        <!--aop依赖 end -->
+
+        <!--webSocket依赖 begin -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
+        <!--webSocket依赖 end -->
 	</dependencies>
 
 	<build>

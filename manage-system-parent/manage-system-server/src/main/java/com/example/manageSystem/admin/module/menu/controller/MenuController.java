@@ -72,4 +72,12 @@ public class MenuController {
         }
     }
 
+    @GetMapping("/del")
+    public Result del(Integer id){
+        if(menuService.del(id)){
+            return Result.ok("删除成功");
+        }else {
+            return Result.error(StatusCode.DELETEERROR,"删除失败");
+        }
+    }
 }

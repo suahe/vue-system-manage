@@ -50,6 +50,7 @@ export default {
                     sysApi.login(this.params).then(res=>{
                         if (res.flag) {
                             this.$message.success("登录成功");
+                            this.init(this.params.username);
                             localStorage.setItem('ms_username', this.params.username);
                             this.$router.push('/');
                         }else {
@@ -68,6 +69,51 @@ export default {
                 }
             });
         },
+        //webSocket 设置 begin
+        init: function (usename) {
+            if(typeof(WebSocket) === "undefined"){
+                console.log("您的浏览器不支持socket")
+            }else{
+                // 实例化socket
+                this.socket = new WebSocket("ws://localhost:9011/imserver/"+usename);
+                // 监听socket连接
+                this.socket.onopen = this.open
+                // 监听socket错误信息
+                this.socket.onerror = this.error
+                // 监听socket消息
+                this.socket.onmessage = this.getMessage
+            }
+        },
+        open: function () {
+            console.log("socket连接成功")
+        },
+        error: function () {
+            console.log("连接错误")
+        },
+        getMessage: function (msg) {
+            if("登录过期，请重新登录！"==msg.data){
+                this.$message.error({
+                    message:"登录过期，请重新登录！",
+                    showClose:true,//是否显示关闭
+                    duration:60000, //显示时间毫秒
+                });
+                this.destroyed();
+                localStorage.removeItem('ms_username');
+                this.$router.push('/login');
+            }
+            console.log(msg.data)
+        },
+        send: function () {
+            this.socket.send(params)
+        },
+        close: function () {
+            console.log("socket已经关闭")
+        },
+        destroyed () {
+            // 销毁监听
+            this.socket.onclose = this.close
+        }
+        //webSocket 设置 end
     },
 };
 </script>

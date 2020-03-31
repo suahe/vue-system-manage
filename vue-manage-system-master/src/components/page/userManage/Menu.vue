@@ -9,19 +9,19 @@
         </div>
         <div class="container">
             <div>
-                <el-button type="primary" @click="expandAll()"  size="small">全部展开</el-button> 
+                <el-button type="primary" @click="expandAll()"  size="small">全部展开</el-button>
                 <el-button type="primary" @click="closeAll()"  size="small">全部折叠</el-button>
                 <el-button type="primary" class="el-icon-lx-roundaddfill" @click="handleAdd()">新增</el-button>
             </div>
             <div>
                 <el-table :data="tableData" style="width: 100%">
-                    <TableTreeColumn ref="c1" prop="name" treeKey="id"  label="资源名称" align="center">
+                    <TableTreeColumn ref="c1" prop="name" treeKey="id" label="资源名称">
                     </TableTreeColumn>
-                    <el-table-column prop="url" label="资源路径" align="center"></el-table-column>
-                    <el-table-column prop="perms" label="权限编码" align="center"></el-table-column>
-                    <el-table-column prop="type" label="资源类型" align="center"></el-table-column>
-                    <el-table-column prop="orderNum" label="排序号" align="center"></el-table-column>
-                    <el-table-column label="操作" width="280" align="center">
+                    <el-table-column prop="url" label="资源路径" ></el-table-column>
+                    <el-table-column prop="perms" label="权限编码" ></el-table-column>
+                    <el-table-column prop="type" label="资源类型" ></el-table-column>
+                    <el-table-column prop="orderNum" label="排序号" ></el-table-column>
+                    <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
                             <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                             <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
@@ -98,7 +98,7 @@
 </template>
 <script>
     import TableTreeColumn from '@/components/common/tableTree/tableTreeColumn.vue'
-    import {getMenuList,getMenuById,editMenu,addMenu} from  '@/api/userManage'
+    import {getMenuList,getMenuById,editMenu,addMenu,delMenuById} from  '@/api/userManage'
     export default {
         components: {
             TableTreeColumn,
@@ -248,7 +248,24 @@
             },
             //全部展开
             expandAll() {
-                this.$refs.c1.expandedAll(this.menuList);
+                var expandList = [];
+                this.menuList.forEach((item)=>{
+                    expandList.push(item);
+                    if(item.children&&item.children.length>0){
+                        this.expandChildrenList(item.children,expandList);
+                    }
+                });
+                debugger
+                this.$refs.c1.expandedAll(expandList);
+            },
+            expandChildrenList(data,expandList){
+                data.forEach((item)=>{
+                    expandList.push(item);
+                    if(item.children&&item.children.length>0){
+                        this.expandChildrenList(item.children,expandList)
+                    }
+                });
+                return expandList;
             },
             //全部折叠
             closeAll() {
@@ -322,6 +339,21 @@
                     }
                 });
             },
+            handleDelete(index, row){
+                this.idx = index;
+                this.form = row;
+                this.$confirm('确定要删除吗？', '提示', {
+                    type: 'warning'
+                }).then(() => {
+                    delMenuById(row.id).then(res=>{
+                        if(res.flag){
+                            this.getData();
+                        }else {
+                            this.$message.error(res.message);
+                        }
+                    })
+                }).catch(() => {});
+            }
         }
     }
 </script>

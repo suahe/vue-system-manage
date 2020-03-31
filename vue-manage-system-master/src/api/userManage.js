@@ -75,6 +75,9 @@ export const saveRolePerms = params =>{
   return http.requestPost(apiUrl+'/sys/role/saveRolePerms',params);
 };
 
+export const delMenuById = (id) =>{
+  return http.requestQuickGet(apiUrl+'/sys/menu/del?id='+id);
+}
 
 //..........................用户管理..........................
 /**根据组织id获取用户列表*/

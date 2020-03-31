@@ -19,8 +19,8 @@
                 <el-button type="primary" @click="save">保 存</el-button>
             </span>
         </el-tab-pane>
-        <el-tab-pane label="小程序配置" name="second">配置管理</el-tab-pane>
-        <el-tab-pane label="邮箱配置" name="third">角色管理</el-tab-pane>
+        <el-tab-pane label="小程序配置" name="second">小程序配置</el-tab-pane>
+        <el-tab-pane label="邮箱配置" name="third">邮箱配置</el-tab-pane>
         <!--<el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>-->
     </el-tabs>
 </template>
