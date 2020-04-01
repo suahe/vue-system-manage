@@ -35,7 +35,6 @@
         },
         methods: {
             childStyles(row) {
-                debugger
                 var  row ={
                     'padding-left': (row.level > 1 ? row.level * 7 : 0) + 'px'
                 };

@@ -249,17 +249,19 @@
             //全部展开
             expandAll() {
                 var expandList = [];
-                this.menuList.forEach((item)=>{
+                //将最顶级的父级那去遍历展示
+                this.tableData.forEach((item)=>{
+                    item._expanded = true;
                     expandList.push(item);
                     if(item.children&&item.children.length>0){
                         this.expandChildrenList(item.children,expandList);
                     }
                 });
-                debugger
                 this.$refs.c1.expandedAll(expandList);
             },
             expandChildrenList(data,expandList){
                 data.forEach((item)=>{
+                    item._expanded = true;
                     expandList.push(item);
                     if(item.children&&item.children.length>0){
                         this.expandChildrenList(item.children,expandList)
@@ -269,13 +271,22 @@
             },
             //全部折叠
             closeAll() {
-                var foldList = [];
-                this.menuList.forEach((menu) => {
-                    if (!menu.parentId) {
-                        foldList.push(menu);
+                this.tableData.forEach((item)=>{
+                    item._expanded = false;
+                    if(item.children&&item.children.length>0){
+                        this.closeChildrenList(item.children);
                     }
                 });
-                this.$refs.c1.closeAll(foldList);
+                this.$refs.c1.closeAll(this.tableData);
+            },
+            closeChildrenList(data){
+                data.forEach((item)=>{
+                    item._expanded = false;
+                    if(item.children&&item.children.length>0){
+                        this.closeChildrenList(item.children)
+                    }
+                });
+                return data;
             },
             //新增窗口
             handleAdd() {
