@@ -22,7 +22,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<lombok.version>1.16.18</lombok.version>
-		<spring.boot.version>2.0.4.RELEASE</spring.boot.version>
+		<spring.boot.version>2.5.12</spring.boot.version>
 	</properties>
 
 	<!-- dependencyManagement进行版本控制-->
